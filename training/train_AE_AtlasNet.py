@@ -30,8 +30,8 @@ parser.add_argument('--accelerated_chamfer', type=int, default =0   ,  help='use
 opt = parser.parse_args()
 print (opt)
 # ========================================================== #
-
-# =============DEFINE CHAMFER LOSS======================================== #
+# =============DEFINE CHAMFER LOSS========================== #
+# ========================================================== #
 if opt.accelerated_chamfer:
     sys.path.append("./extension/")
     import dist_chamfer as ext
@@ -64,8 +64,8 @@ else:
         P = (rx.transpose(2,1) + ry - 2*zz)
         return P.min(1)[0], P.min(2)[0]
 # ========================================================== #
-
-# =============DEFINE stuff for logs ======================================== #
+# =============DEFINE stuff for logs ======================= #
+# ========================================================== #
 # Launch visdom for visualization
 vis = visdom.Visdom(port = 8888, env=opt.env)
 now = datetime.datetime.now()
@@ -82,10 +82,10 @@ print("Random Seed: ", opt.manualSeed)
 random.seed(opt.manualSeed)
 torch.manual_seed(opt.manualSeed)
 best_val_loss = 10
+
 # ========================================================== #
-
-
-# ===================CREATE DATASET================================= #
+# ===================CREATE DATASET========================= #
+# ========================================================== #
 #Create train/test dataloader
 dataset = ShapeNet( normal = False, class_choice = None, train=True)
 dataloader = torch.utils.data.DataLoader(dataset, batch_size=opt.batchSize,
@@ -97,9 +97,10 @@ dataloader_test = torch.utils.data.DataLoader(dataset_test, batch_size=opt.batch
 print('training set', len(dataset.datapath))
 print('testing set', len(dataset_test.datapath))
 len_dataset = len(dataset)
-# ========================================================== #
 
-# ===================CREATE network================================= #
+# ========================================================== #
+# ===================CREATE network========================= #
+# ========================================================== #
 network = AE_AtlasNet(num_points = opt.num_points, nb_primitives = opt.nb_primitives)
 network.cuda() #put network on GPU
 network.apply(weights_init) #initialization of the weight
@@ -108,13 +109,13 @@ if opt.model != '':
     network.load_state_dict(torch.load(opt.model))
     print(" Previous weight loaded ")
 # ========================================================== #
-
-# ===================CREATE optimizer================================= #
+# ===================CREATE optimizer======================= #
+# ========================================================== #
 lrate = 0.001 #learning rate
 optimizer = optim.Adam(network.parameters(), lr = lrate)
 # ========================================================== #
-
-# =============DEFINE stuff for logs ======================================== #
+# =============DEFINE stuff for logs ======================= #
+# ========================================================== #
 #meters to record stats on learning
 train_loss = AverageValueMeter()
 val_loss = AverageValueMeter()
@@ -127,14 +128,15 @@ val_curve = []
 labels_generated_points = torch.Tensor(range(1, (opt.nb_primitives+1)*(opt.num_points//opt.nb_primitives)+1)).view(opt.num_points//opt.nb_primitives,(opt.nb_primitives+1)).transpose(0,1)
 labels_generated_points = (labels_generated_points)%(opt.nb_primitives+1)
 labels_generated_points = labels_generated_points.contiguous().view(-1)
-# ========================================================== #
 
-# =============start of the learning loop ======================================== #
+# ========================================================== #
+# =============start of the learning loop ================== #
+# ========================================================== #
 for epoch in range(opt.nepoch):
     #TRAIN MODE
     train_loss.reset()
     network.train()
-    
+
     # learning rate schedule
     if epoch==100:
         optimizer = optim.Adam(network.parameters(), lr = lrate/10.0)

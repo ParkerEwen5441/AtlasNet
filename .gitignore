@@ -1,0 +1,8 @@
+# Python
+*.pyc
+__pycache__/
+
+*.pth
+*.png
+*.ply
+*.txt

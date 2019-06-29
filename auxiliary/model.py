@@ -15,7 +15,6 @@ class STN3d(nn.Module):
         self.conv1 = torch.nn.Conv1d(3, 64, 1)
         self.conv2 = torch.nn.Conv1d(64, 128, 1)
         self.conv3 = torch.nn.Conv1d(128, 1024, 1)
-        #self.mp1 = torch.nn.MaxPool1d(num_points)
         self.fc1 = nn.Linear(1024, 512)
         self.fc2 = nn.Linear(512, 256)
         self.fc3 = nn.Linear(256, 9)
@@ -26,10 +25,7 @@ class STN3d(nn.Module):
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
-        #x = self.mp1(x)
-        #print(x.size())
         x,_ = torch.max(x, 2)
-        #print(x.size())
         x = x.view(-1, 1024)
 
         x = F.relu(self.fc1(x))
@@ -61,6 +57,7 @@ class PointNetfeat(nn.Module):
         #self.mp1 = torch.nn.MaxPool1d(num_points)
         self.num_points = num_points
         self.global_feat = global_feat
+
     def forward(self, x):
         batchsize = x.size()[0]
         if self.trans:
@@ -121,6 +118,31 @@ class PointNetfeatNormal(nn.Module):
                 return torch.cat([x, pointfeat], 1), trans
         else:
             return x
+
+class TangentConv(nn.Module):
+    def __init__(self, num_points = 2500):
+        super(TangentConv, self).__init()
+        self.num_points = num_points
+        self.fc1 = nn.Linear(32, self.num_points)
+        self.fc2 = nn.Linear(32, self.num_points)
+
+        self.fc3 = nn.Linear(32, self.num_points)
+        self.fc4 = nn.Linear(64, self.num_points)
+        self.fc5 = nn.Linear(64, self.num_points)
+
+        self.fc6 = nn.Linear(64, self.num_points)
+        self.fc7 = nn.Linear(128, self.num_points)
+    def forward(self, x):
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x,_ = torch.max(x, 1)
+        x = F.relu(self.fc3(x))
+        x = F.relu(self.fc4(x))
+        x = F.relu(self.fc5(x))
+        x,_ = torch.max(x, 1)
+        x = F.relu(self.fc6(x))
+        x = F.relu(self.fc7(x))
+
 
 #OUR METHOD
 import resnet
@@ -313,6 +335,7 @@ class AE_AtlasNet_SPHERE(nn.Module):
             outs.append(self.decoder[i](y))
         return torch.cat(outs,2).contiguous().transpose(2,1).contiguous()
 
+
 class SVR_AtlasNet_SPHERE(nn.Module):
     def __init__(self, num_points = 2048, bottleneck_size = 1024, nb_primitives = 1, pretrained_encoder=False):
         super(SVR_AtlasNet_SPHERE, self).__init__()
@@ -388,7 +411,6 @@ class PointDecoder(nn.Module):
         x = self.th(self.fc4(x))
         x = x.view(batchsize, 3, self.num_points).transpose(1,2).contiguous()
         return x
-
 
 
 class PointDecoderNormal(nn.Module):
@@ -468,6 +490,7 @@ class SVR_Baseline(nn.Module):
         x = self.encoder(x)
         x = self.decoder(x)
         return x
+
 
 if __name__ == '__main__':
     # print('testing our method...')
