@@ -6,6 +6,7 @@ import torch
 import sys
 sys.path.append('./auxiliary/')
 from dataset import *
+from dataset_TC import *
 from model import *
 from utils import *
 from ply import *
@@ -67,7 +68,7 @@ torch.manual_seed(opt.manualSeed)
 # ========================================================== #
 # ===================CREATE DATASET========================= #
 # ========================================================== #
-dataset_test = ShapeNet( normal = False, class_choice = None, train=False)
+dataset_test = TangConvShapeNet( normal = False, class_choice = None, train=False)
 dataloader_test = torch.utils.data.DataLoader(dataset_test, batch_size=1,
                                           shuffle=False, num_workers=int(opt.workers))
 
@@ -77,7 +78,7 @@ len_dataset = len(dataset_test)
 # ========================================================== #
 # =================== CREATE NETWORK ======================= #
 # ========================================================== #
-network = AE_AtlasNet(num_points = opt.num_points, nb_primitives = opt.nb_primitives)
+network = TangConv_AtlasNet(num_points = opt.num_points, nb_primitives = opt.nb_primitives)
 network.cuda()
 network.apply(weights_init)
 if opt.model != '':

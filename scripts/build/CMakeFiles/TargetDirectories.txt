@@ -1,0 +1,3 @@
+/home/parker/code/AtlasNet/scripts/build/CMakeFiles/edit_cache.dir
+/home/parker/code/AtlasNet/scripts/build/CMakeFiles/rebuild_cache.dir
+/home/parker/code/AtlasNet/scripts/build/CMakeFiles/obj2pcd.dir

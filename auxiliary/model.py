@@ -80,6 +80,7 @@ class PointNetfeat(nn.Module):
         else:
             return x
 
+
 class PointNetfeatNormal(nn.Module):
     def __init__(self, num_points = 2500, global_feat = True, trans = False):
         super(PointNetfeatNormal, self).__init__()
@@ -119,6 +120,7 @@ class PointNetfeatNormal(nn.Module):
         else:
             return x
 
+
 class TangentConv(nn.Module):
     def __init__(self, num_points = 2500):
         super(TangentConv, self).__init()
@@ -132,6 +134,7 @@ class TangentConv(nn.Module):
 
         self.fc6 = nn.Linear(64, self.num_points)
         self.fc7 = nn.Linear(128, self.num_points)
+
     def forward(self, x):
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
@@ -169,6 +172,7 @@ class PointGenCon(nn.Module):
         x = F.relu(self.bn3(self.conv3(x)))
         x = self.th(self.conv4(x))
         return x
+
 
 class SVR_AtlasNet(nn.Module):
     def __init__(self, num_points = 2048, bottleneck_size = 1024, nb_primitives = 5, pretrained_encoder = False, cuda=True):
@@ -232,6 +236,7 @@ class SVR_AtlasNet(nn.Module):
             outs.append(self.decoder[i](y))
         return torch.cat(outs, 2).contiguous().transpose(2,1).contiguous()
 
+
 class AE_AtlasNet(nn.Module):
     def __init__(self, num_points = 2048, bottleneck_size = 1024, nb_primitives = 1):
         super(AE_AtlasNet, self).__init__()
@@ -282,6 +287,58 @@ class AE_AtlasNet(nn.Module):
             y = torch.cat( (rand_grid, y), 1).contiguous()
             outs.append(self.decoder[i](y))
         return torch.cat(outs,2).contiguous().transpose(2,1).contiguous()
+
+
+class TangConv_AtlasNet(nn.Module):
+    def __init__(self, num_points = 2048, bottleneck_size = 1024, nb_primitives = 1):
+        super(AE_AtlasNet, self).__init__()
+        self.num_points = num_points
+        self.bottleneck_size = bottleneck_size
+        self.nb_primitives = nb_primitives
+        self.encoder = nn.Sequential(TangentConv(num_points),
+                                      nn.Linear(1024, self.bottleneck_size),
+                                      nn.BatchNorm1d(self.bottleneck_size),
+                                      nn.ReLU()
+                                    )
+        self.decoder = nn.ModuleList([PointGenCon(bottleneck_size = 2 +self.bottleneck_size) for i in range(0,self.nb_primitives)])
+
+
+    def forward(self, x):
+        x = self.encoder(x)
+        outs = []
+        for i in range(0,self.nb_primitives):
+            rand_grid = Variable(torch.cuda.FloatTensor(x.size(0),2,self.num_points//self.nb_primitives))
+            rand_grid.data.uniform_(0,1)
+            y = x.unsqueeze(2).expand(x.size(0),x.size(1), rand_grid.size(2)).contiguous()
+            y = torch.cat( (rand_grid, y), 1).contiguous()
+            outs.append(self.decoder[i](y))
+        return torch.cat(outs,2).contiguous().transpose(2,1).contiguous()
+
+    def forward_inference(self, x, grid):
+        x = self.encoder(x)
+        outs = []
+        for i in range(0,self.nb_primitives):
+            rand_grid = Variable(torch.cuda.FloatTensor(grid[i]))
+            rand_grid = rand_grid.transpose(0,1).contiguous().unsqueeze(0)
+            rand_grid = rand_grid.expand(x.size(0),rand_grid.size(1), rand_grid.size(2)).contiguous()
+            # print(rand_grid.sizerand_grid())
+            y = x.unsqueeze(2).expand(x.size(0),x.size(1), rand_grid.size(2)).contiguous()
+            y = torch.cat( (rand_grid, y), 1).contiguous()
+            outs.append(self.decoder[i](y))
+        return torch.cat(outs,2).contiguous().transpose(2,1).contiguous()
+
+    def forward_inference_from_latent_space(self, x, grid):
+        outs = []
+        for i in range(0,self.nb_primitives):
+            rand_grid = Variable(torch.cuda.FloatTensor(grid[i]))
+            rand_grid = rand_grid.transpose(0,1).contiguous().unsqueeze(0)
+            rand_grid = rand_grid.expand(x.size(0),rand_grid.size(1), rand_grid.size(2)).contiguous()
+            # print(rand_grid.sizerand_grid())
+            y = x.unsqueeze(2).expand(x.size(0),x.size(1), rand_grid.size(2)).contiguous()
+            y = torch.cat( (rand_grid, y), 1).contiguous()
+            outs.append(self.decoder[i](y))
+        return torch.cat(outs,2).contiguous().transpose(2,1).contiguous()
+
 
 #TEST with spheric noise
 class AE_AtlasNet_SPHERE(nn.Module):

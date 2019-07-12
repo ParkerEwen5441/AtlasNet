@@ -59,6 +59,7 @@ class ShapeNet(data.Dataset):
                 fns = fns[int(len(fns) * 0.8):]
 
 
+            # self.meta[item] = (rendering directory, mesh directory, item name, item path, )
             if len(fns) != 0:
                 self.meta[item] = []
                 for fn in fns:
@@ -166,6 +167,7 @@ class ShapeNet(data.Dataset):
             data = data[:3,:,:]
         else:
             data = 0
+
         return data, point_set.contiguous(), fn[2], fn[3], fn[4]
 
 

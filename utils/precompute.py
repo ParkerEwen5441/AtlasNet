@@ -2,15 +2,21 @@ import os
 import sys
 import math
 import json
-import utils.path_config
-
+import inspect
 import numpy as np
 
+open3d_path = '/home/parker/packages/Open3D/build/lib/'
+tc_path = '/home/parker/code/AtlasNet/'
+sys.path.append(open3d_path)
 
+from py3d import *
+
+def get_tc_path():
+	return tc_path
 
 class param:
 	def __init__(self):
-		with open('config/config.json') as f:
+		with open('../config/config.json') as f:
 			config = json.load(f)
 
 		self.min_cube_size = config['pre_min_cube_size']
@@ -23,19 +29,24 @@ class param:
 		self.interp_method = config['pre_interp_method']
 		self.noise_level = config['pre_noise_level']
 
-def run_precompute(config):
-	p = param(config)
+
+def run_precompute():
+	p = param()
 	make_dir(p.output_dir)
 
-	for scan_name in list_dir(p.dataset_dir):
+	for scan_name in list_files(p.dataset_dir):
 		for rot in range(0, p.num_rotations):
-			cloud_file = os.path.join(p.dataset_dir, scan_name, "scan.pcd")
-			label_file = os.path.join(p.dataset_dir, scan_name, "scan.labels")
+			# cloud_file = os.path.join(p.dataset_dir, scan_name, "scan.pcd")
+			cloud_file = os.path.join(p.dataset_dir, scan_name)
 
-			if not os.path.exists(cloud_file) or not os.path.exists(label_file):
+			# label_file = os.path.join(p.dataset_dir, scan_name, "scan.labels")
+
+			# if not os.path.exists(cloud_file) or not os.path.exists(label_file):
+			# 	continue
+			if not os.path.exists(cloud_file):
 				continue
 
-			if self.noise_level != 0.0:
+			if p.noise_level != 0.0:
 				print("processing scan: %s, rot: %d, noise: %f" %
 						(scan_name, rot, p.noise_level))
 			else:
@@ -43,7 +54,7 @@ def run_precompute(config):
 
 			pcd_colors = read_point_cloud(cloud_file)
 			pcd_labels = read_point_cloud(cloud_file)
-			txt_labels = read_txt_labels(label_file)
+			# txt_labels = read_txt_labels(label_file)
 
 			theta = rot * 2 * math.pi / p.num_rotations
 
@@ -64,8 +75,8 @@ def run_precompute(config):
 					pcd_colors.points[i] += additive_noise_to_points[i]
 					pcd_labels.points[i] += additive_noise_to_points[i]
 
-			lb = np.repeat(np.expand_dims(txt_labels, axis=1), 3, axis=1)
-			pcd_labels.colors = Vector3dVector(lb)
+			# lb = np.repeat(np.expand_dims(txt_labels, axis=1), 3, axis=1)
+			# pcd_labels.colors = Vector3dVector(lb)
 
 			min_bound = pcd_colors.get_min_bound() - p.min_cube_size * 0.5
 			max_bound = pcd_colors.get_max_bound() + p.min_cube_size * 0.5
@@ -77,13 +88,14 @@ def run_precompute(config):
 				multiplier = pow(2, i)
 				pcd_colors_down = voxel_down_sample_for_surface_conv(pcd_colors, multiplier*p.min_cube_size,
 					min_bound, max_bound, False)
-				pcd_labels_down = voxel_down_sample_for_surface_conv(pcd_labels, multiplier*p.min_cube_size,
-					min_bound, max_bound, True)
+				# pcd_labels_down = voxel_down_sample_for_surface_conv(pcd_labels, multiplier*p.min_cube_size,
+				# 	min_bound, max_bound, True)
 
 				if p.interp_method == "depth_densify_nearest_neighbor":
 					method = depth_densify_nearest_neighbor
 				elif p.interp_method == "depth_densify_gaussian_kernel":
 					method = depth_densify_gaussian_kernel
+
 				parametrization = planar_parametrization(pcd_colors_down.point_cloud,
 							KDTreeSearchParamHybrid(radius = 2*multiplier*p.min_cube_size, max_nn=100),
 							PlanarParameterizationOption(
@@ -94,8 +106,8 @@ def run_precompute(config):
 
 				np.savez_compressed(os.path.join(p.output_dir, scan_name, str(rot), 'scale_' + str(i) + '.npz'),
 						points=np.asarray(pcd_colors_down.point_cloud.points),
-						colors=np.asarray(pcd_colors_down.point_cloud.colors),
-						labels_gt=np.reshape(np.asarray(pcd_labels_down.point_cloud.colors)[:, 0], (num_points)),
+						# colors=np.asarray(pcd_colors_down.point_cloud.colors),
+						# labels_gt=np.reshape(np.asarray(pcd_labels_down.point_cloud.colors)[:, 0], (num_points)),
 						nn_conv_ind=parametrization.index[0],
 						pool_ind=pcd_colors_down.cubic_id,
 						depth=parametrization.depth.data)
@@ -103,7 +115,7 @@ def run_precompute(config):
 				# TODO Add support for Gaussian kernel
 
 				pcd_colors = pcd_colors_down.point_cloud
-				pcd_labels = pcd_labels_down.point_cloud
+				# pcd_labels = pcd_labels_down.point_cloud
 
 			sys.stdout.flush()
 		sys.stdout.write("\n")
@@ -127,3 +139,14 @@ def list_dir(directory):
 		for subdir in dirs:
 			paths.append(os.path.join(root.replace(directory,''), subdir))
 	return paths
+
+def list_files(directory):
+	paths = []
+	for root, dirs, files in os.walk(directory):
+		for file in files:
+			paths.append(os.path.join(root.replace(directory,''), file))
+	return paths
+
+
+if __name__ == "__main__":
+	run_precompute()
