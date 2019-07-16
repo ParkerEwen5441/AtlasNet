@@ -35,6 +35,8 @@ def run_precompute():
 	make_dir(p.output_dir)
 
 	for scan_name in list_files(p.dataset_dir):
+		if '.txt' in scan_name:
+			continue
 		for rot in range(0, p.num_rotations):
 			# cloud_file = os.path.join(p.dataset_dir, scan_name, "scan.pcd")
 			cloud_file = os.path.join(p.dataset_dir, scan_name)
@@ -116,6 +118,23 @@ def run_precompute():
 
 				pcd_colors = pcd_colors_down.point_cloud
 				# pcd_labels = pcd_labels_down.point_cloud
+
+
+				data = np.load(os.path.join(p.output_dir, scan_name, str(rot), 'scale_' + str(i) + '.npz'))
+				lst = data.files
+				# for item in lst:
+				#     print(item)
+				#     print(data[item])
+				    # input("WAIT")
+				print(data['points'].shape)
+				print(data['nn_conv_ind'].shape)
+				print(data['pool_ind'].shape)
+				print(data['depth'].shape)
+				print(data['points'])
+				print(data['nn_conv_ind'])
+				print(data['pool_ind'])
+				input("CHECK HERE FOR TANG IMAGE")
+
 
 			sys.stdout.flush()
 		sys.stdout.write("\n")

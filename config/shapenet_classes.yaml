@@ -7,9 +7,13 @@ classes:
     ref: "02958343"
   - name: chair
     ref: "03001627"
+  # - name: firearm
+  #   ref: "04090263"
   # - name: lamp
   #   ref: "03636649"
-  # - name: sofa
+  # - name: couch
   #   ref: "04256520"
+  # - name: speaker
+  #   ref: "03691459"
   # - name: table
   #   ref: "04379243"
