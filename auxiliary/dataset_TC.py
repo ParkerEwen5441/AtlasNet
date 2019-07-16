@@ -1,19 +1,20 @@
 from __future__ import print_function
-import torch.utils.data as data
-import os.path
-import torch
-import torchvision.transforms as transforms
-import numpy as np
 import os
-from PIL import Image
+import sys
+import torch
+import os.path
+import numpy as np
 from utils import *
+from PIL import Image
+import torch.utils.data as data
+import torchvision.transforms as transforms
 
 open3d_path = '/home/parker/packages/Open3D/build/lib/'
 sys.path.append(open3d_path)
 from py3d import *
 
 class TangConvShapeNet(data.Dataset):
-    def __init__(self, root="/home/parker/datasets/ShapeNetTangConv", class_choice="car",
+    def __init__(self, root="/home/parker/datasets/TangConv", class_choice="couch",
                  train = True, npoints=2500, normal=False, balanced=False,
                  gen_view=False, SVR=False, idx=0):
         self.balanced = balanced
@@ -28,6 +29,8 @@ class TangConvShapeNet(data.Dataset):
         self.SVR = SVR
         self.gen_view = gen_view
         self.idx=idx
+        self.num_scales = 3
+        self.training_data = []
 
         # From catfile, get chosen categories we want to use
         with open(self.catfile, 'r') as f:
@@ -39,16 +42,12 @@ class TangConvShapeNet(data.Dataset):
             self.cat = {k:v for k,v in self.cat.items() if k in class_choice}
         print(self.cat)
 
-        empty = []
         for item in self.cat:
 
             # Get directories of objects of a specific class in ShapeNetRendering folder
-            dir_img  = os.path.join(self.root, self.cat[item])
-            fns_img = sorted(os.listdir(dir_img))
+            dir_cat  = os.path.join(self.root, self.cat[item])
+            fns = sorted(os.listdir(dir_cat))
 
-            # Matches items within the ShapeNetRendering and customShapeNet directories,
-            #   only keeps item if it appears in both, prints out number of items kept
-            fns = [val for val in fns_img]
             print('category: ', self.cat[item], 'files: ' + str(len(fns)))
 
             # First 20% of data for testing, last 80% for training
@@ -58,10 +57,10 @@ class TangConvShapeNet(data.Dataset):
                 fns = fns[int(len(fns) * 0.8):]
 
 
-            # self.meta[item][0] = Tangent Image (.npz) from TangConv method
-            #                [1] = ShapeNet point cloud file (.pcd)
+            # self.meta[item][0] = TangConv precompute directory
+            #                [1] = ShapeNet point cloud file (.ply)
             #                [2] = name of the category of the item
-            #                [3] = file name
+            #                [3] = item name
             #
             #                [x] = path to the normalized_model dir in ShapeNetCorev2
 
@@ -69,14 +68,9 @@ class TangConvShapeNet(data.Dataset):
             if len(fns) != 0:
                 self.meta[item] = []
                 for fn in fns:
-                    self.meta[item].append((os.path.join(dir_img, fn, 'tangent_image.npz'),
-                                            os.path.join(dir_img, fn + '.point_cloud.pcd'),
+                    self.meta[item].append((os.path.join(dir_cat, fn),
+                                            os.path.join(dir_cat, fn + '.points.ply'),
                                             item, fn))
-            else:
-                empty.append(item)
-
-        for item in empty:
-            del self.cat[item]
 
         self.idx2cat = {}
         self.size = {}
@@ -90,40 +84,13 @@ class TangConvShapeNet(data.Dataset):
             for fn in self.meta[item]:
                 self.datapath.append(fn)
 
-        # Normalization, data augmentation, and other transform functions for the .pngs
-        # normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-        #                              std=[0.229, 0.224, 0.225])
-
-        # self.transforms = transforms.Compose([
-        #                      transforms.Resize(size =  224, interpolation = 2),
-        #                      transforms.ToTensor(),
-        #                      # normalize,
-        #                 ])
-
-        # # RandomResizedCrop or RandomCrop
-        # self.dataAugmentation = transforms.Compose([
-        #                                  transforms.RandomCrop(127),
-        #                                  transforms.RandomHorizontalFlip(),
-        #                     ])
-        # self.validating = transforms.Compose([
-        #                 transforms.CenterCrop(127),
-        #                 ])
-
-        # self.perCatValueMeter = {}
-
-        # for item in self.cat:
-        #     self.perCatValueMeter[item] = AverageValueMeter()
-
-        # self.perCatValueMeter_metro = {}
-        # for item in self.cat:
-        #     self.perCatValueMeter_metro[item] = AverageValueMeter()
-
-        # self.transformsb = transforms.Compose([
-        #                      transforms.Resize(size =  224, interpolation = 2),
-        #                 ])
+        print('SAMPLE: {}'.format(self.datapath[0]))
+        print(len(self.datapath))
+        input("CHECK DATAPATH SIZE")
 
     def __getitem__(self, index):
         fn = self.datapath[index]
+
         # Opens file item .ply file and checks if it has information
         with open(fn[1]) as fp:
             for i, line in enumerate(fp):
@@ -148,53 +115,43 @@ class TangConvShapeNet(data.Dataset):
                 print(fn)
                 print(excep)
 
+        # Reads each scale_x.npz file and extracts s.points, s.conv_ind, s.pool_ind,
+        #   s.depth, and s.normals. Each scale represents a different layer size in the
+        #   TangConv encoder.
+        s = ScanData()
+        s.load(fn[0], self.num_scales)
+        s.remap_depth()
+        s.remap_normals()
+        scale = [s.clouds[0], s.conv_ind[0], s.pool_ind[0], s.depth[0]]
+        print('Cloud[0]: {}'.format(s.clouds[0]))
+        print('Conv_ind[0]: {}'.format(s.conv_ind[0]))
+        print('Pool_ind[0]: {}'.format(s.pool_ind[0]))
+        print('Depth[0]: {}'.format(s.depth[0]))
+        print('Depth[1]: {}'.format(s.depth[1]))
+        print('Depth[2]: {}'.format(s.depth[2]))
+        print('Scale: {}'.format(scale))
+        input('CHECK FIRST INDEX')
+
         l = np.load(fn[0])
         cloud = PointCloud()
         cloud.points = Vector3dVector(l['points'])
 
         # If not normals, only keep first 3 points from .ply file. If normals, multiply
         #   normals from .ply by 0.1. Convert to pytorch tensor
-        if not self.normal:
-            point_set = point_set[:,0:3]
-        else:
-            point_set[:,3:6] = 0.1 * point_set[:,3:6]
-        point_set = torch.from_numpy(point_set)
 
-        # load image
-        # if self.SVR:
-        #     if self.train:
-        #         N_tot = len(os.listdir(fn[0])) - 3
-        #         if N_tot==1:
-        #             print("only one view in ", fn)
-        #         if self.gen_view:
-        #             N=0
-        #         else:
-        #             N = np.random.randint(1,N_tot)
-        #         if N < 10:
-        #             im = Image.open(os.path.join(fn[0], "0" + str(N) + ".png"))
-        #         else:
-        #             im = Image.open(os.path.join(fn[0],  str(N) + ".png"))
+        point_set = torch.from_numpy(point_set[:, 0:3])
 
-        #         im = self.dataAugmentation(im) #random crop
-        #     else:
-        #         if self.idx < 10:
-        #             im = Image.open(os.path.join(fn[0], "0" + str(self.idx) + ".png"))
-        #         else:
-        #             im = Image.open(os.path.join(fn[0],  str(self.idx) + ".png"))
-        #         im = self.validating(im) #center crop
-        #     data = self.transforms(im) #scale
-        #     data = data[:3,:,:]
-        # else:
-        #     data = 0
-
-        # return[0] : image if SVR, 0 otherwise
-        #       [1] : Tangent Image file (.npz)
-        #       [2] : Point Cloud file (.pcd)
-        #       [3] : name of item category
+        # return[0] : scale_0 masks and other params
+        #       [1] : scale_0 masks and other params
+        #       [2] : scale_0 masks and other params
+        #       [3] : Point set from point cloud .plc file
+        #       [3] : category name
         #       [4] : item name
         #
         #       [x] : path to the normalized_model drir in ShapeNetCorev2
-        return data, point_set.contiguous(), fn[1], fn[2], fn[3]
+
+        # return data, point_set.contiguous(), fn[1], fn[2], fn[3]
+        return scale[0], scale[1], scale[2], point_set.contiguous(), fn[2], fn[3]
 
 
     def __len__(self):
