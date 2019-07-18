@@ -5,12 +5,16 @@ import torch
 import os.path
 import numpy as np
 from utils import *
+# from .utils.cloud import ScanData
 from PIL import Image
 import torch.utils.data as data
 import torchvision.transforms as transforms
 
+utils_path = '/home/parker/code/AtlasNet/utils/'
 open3d_path = '/home/parker/packages/Open3D/build/lib/'
+sys.path.append(utils_path)
 sys.path.append(open3d_path)
+from cloud import ScanData
 from py3d import *
 
 class TangConvShapeNet(data.Dataset):
@@ -31,6 +35,8 @@ class TangConvShapeNet(data.Dataset):
         self.idx=idx
         self.num_scales = 3
         self.training_data = []
+        self.max_points = 2500
+        self.input_channels = 3
 
         # From catfile, get chosen categories we want to use
         with open(self.catfile, 'r') as f:
@@ -69,7 +75,7 @@ class TangConvShapeNet(data.Dataset):
                 self.meta[item] = []
                 for fn in fns:
                     self.meta[item].append((os.path.join(dir_cat, fn),
-                                            os.path.join(dir_cat, fn + '.points.ply'),
+                                            os.path.join(dir_cat, fn, fn + '.points.ply'),
                                             item, fn))
 
         self.idx2cat = {}
@@ -84,36 +90,9 @@ class TangConvShapeNet(data.Dataset):
             for fn in self.meta[item]:
                 self.datapath.append(fn)
 
-        print('SAMPLE: {}'.format(self.datapath[0]))
-        print(len(self.datapath))
-        input("CHECK DATAPATH SIZE")
 
     def __getitem__(self, index):
         fn = self.datapath[index]
-
-        # Opens file item .ply file and checks if it has information
-        with open(fn[1]) as fp:
-            for i, line in enumerate(fp):
-                if i == 2:
-                    try:
-                        lenght = int(line.split()[2])
-                    except ValueError:
-                        print(fn)
-                        print(line)
-                    break
-
-        # With .ply file, checks if it can load information as a float32
-        # Iterates through the top loop 15 times to prevent a weird error. Lower loop gets
-        #   n lines (n specified as self.npoints) from .ply file and stores as point_set
-        #   given item
-        for i in range(15): #this for loop is because of some weird error that happens sometime during loading I didn't track it down and brute force the solution like this.
-            try:
-                mystring = my_get_n_random_lines(fn[1], n = self.npoints)
-                point_set = np.loadtxt(mystring).astype(np.float32)
-                break
-            except ValueError as excep:
-                print(fn)
-                print(excep)
 
         # Reads each scale_x.npz file and extracts s.points, s.conv_ind, s.pool_ind,
         #   s.depth, and s.normals. Each scale represents a different layer size in the
@@ -122,36 +101,38 @@ class TangConvShapeNet(data.Dataset):
         s.load(fn[0], self.num_scales)
         s.remap_depth()
         s.remap_normals()
-        scale = [s.clouds[0], s.conv_ind[0], s.pool_ind[0], s.depth[0]]
-        print('Cloud[0]: {}'.format(s.clouds[0]))
-        print('Conv_ind[0]: {}'.format(s.conv_ind[0]))
-        print('Pool_ind[0]: {}'.format(s.pool_ind[0]))
-        print('Depth[0]: {}'.format(s.depth[0]))
-        print('Depth[1]: {}'.format(s.depth[1]))
-        print('Depth[2]: {}'.format(s.depth[2]))
-        print('Scale: {}'.format(scale))
-        input('CHECK FIRST INDEX')
+        if np.asarray(s.clouds[0].normals).shape[0] < self.max_points:
+            s.resize(self.max_points)
+        else:
+            s.load(self.datapath[-2][0], self.num_scales)
+            s.remap_depth()
+            s.remap_normals()
 
-        l = np.load(fn[0])
-        cloud = PointCloud()
-        cloud.points = Vector3dVector(l['points'])
+        scale = []
+        scale.append([s.clouds[0], s.conv_ind[0], s.pool_ind[0], s.depth[0], s.pool_mask[0]])
+        scale.append([s.clouds[1], s.conv_ind[1], s.pool_ind[1], s.depth[1], s.pool_mask[0]])
+        scale.append([s.clouds[2], s.conv_ind[2], s.pool_ind[2], s.depth[2], s.pool_mask[0]])
 
-        # If not normals, only keep first 3 points from .ply file. If normals, multiply
-        #   normals from .ply by 0.1. Convert to pytorch tensor
+        # print(np.asarray(scale[0][0].normals))
+        # print(np.asarray(scale[0][0].normals).shape)
+        # print(np.asarray(scale[0][0].normals).shape)
+        # print(scale[2][1].shape)
+        # print(scale[2][2].shape)
+        # print(scale[2][3].shape)
+        print(scale[0][4])
+        input('CHECK PCD')
 
-        point_set = torch.from_numpy(point_set[:, 0:3])
+        point_set = torch.from_numpy(np.asarray(s.clouds[0].points))
 
-        # return[0] : scale_0 masks and other params
-        #       [1] : scale_0 masks and other params
-        #       [2] : scale_0 masks and other params
-        #       [3] : Point set from point cloud .plc file
-        #       [3] : category name
-        #       [4] : item name
+        # return[0] : masks and other params for all scales
+        #       [1] : Point set from point cloud .plc file
+        #       [2] : category name
+        #       [3] : item name
         #
         #       [x] : path to the normalized_model drir in ShapeNetCorev2
 
         # return data, point_set.contiguous(), fn[1], fn[2], fn[3]
-        return scale[0], scale[1], scale[2], point_set.contiguous(), fn[2], fn[3]
+        return scale, point_set.contiguous(), fn[2], fn[3]
 
 
     def __len__(self):
@@ -161,9 +142,9 @@ class TangConvShapeNet(data.Dataset):
 
 if __name__  == '__main__':
 
-    print('Testing Shapenet dataset')
     d  =  TangConvShapeNet(class_choice =  None, balanced= False, train=True, npoints=2500)
-    a = len(d)
-    d  =  TangConvShapeNet(class_choice =  None, balanced= False, train=False, npoints=2500)
-    a = a + len(d)
-    print(a)
+    d.__getitem__(50)
+    # a = len(d)
+    # d  =  TangConvShapeNet(class_choice =  None, balanced= False, train=False, npoints=2500)
+    # a = a + len(d)
+    # print(a)

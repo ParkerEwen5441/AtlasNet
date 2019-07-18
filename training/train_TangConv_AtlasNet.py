@@ -148,13 +148,14 @@ for epoch in range(opt.nepoch):
 
     for i, data in enumerate(dataloader, 0):
         optimizer.zero_grad()
-        img, points, cat, _, _ = data
+        # img, points, cat, _, _ = data
+        masks, points, _, _ = data
         points = points.transpose(2,1).contiguous()
         points = points.cuda()
         #SUPER_RESOLUTION optionally reduce the size of the points fed to PointNet
         points = points[:,:,:opt.super_points].contiguous()
         #END SUPER RESOLUTION
-        pointsReconstructed  = network(points) #forward pass
+        pointsReconstructed  = network(points, masks) #forward pass
         dist1, dist2 = distChamfer(points.transpose(2,1).contiguous(), pointsReconstructed) #loss function
         loss_net = (torch.mean(dist1)) + (torch.mean(dist2))
         loss_net.backward()

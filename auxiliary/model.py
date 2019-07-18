@@ -7,6 +7,10 @@ from torch.autograd import Variable
 import numpy as np
 import torch.nn.functional as F
 
+utils_path = '/home/parker/code/AtlasNet/utils/'
+sys.path.append(utils_path)
+from cloud import get_pooling_mask
+
 #UTILITIES
 class STN3d(nn.Module):
     def __init__(self, num_points = 2500):
@@ -122,29 +126,38 @@ class PointNetfeatNormal(nn.Module):
 
 
 class TangentConv(nn.Module):
-    def __init__(self, num_points = 2500):
+    def __init__(self, masks = masks, num_points = 2500, input_channels = 4, filter_size = 9):
         super(TangentConv, self).__init()
         self.num_points = num_points
-        self.fc1 = nn.Linear(32, self.num_points)
-        self.fc2 = nn.Linear(32, self.num_points)
+        self.masks = masks
 
-        self.fc3 = nn.Linear(32, self.num_points)
-        self.fc4 = nn.Linear(64, self.num_points)
-        self.fc5 = nn.Linear(64, self.num_points)
+        self.conv_11 = torch.nn.Conv2d(input_channels, 32)
+        self.conv_12 = torch.nn.Conv2d(32, 32)
+        self.conv_21 = torch.nn.Conv2d(32, 64)
+        self.conv_22 = torch.nn.Conv2d(64, 64)
+        self.conv_31 = torch.nn.Conv2d(64, 128)
 
-        self.fc6 = nn.Linear(64, self.num_points)
-        self.fc7 = nn.Linear(128, self.num_points)
+    def forward(self, x, masks):
+        x = torch.index_select(x, 0, torch.from_numpy(self.masks[0][1]))
+        x = torch.cat((x, torch.unsqueeze(torch.from_numpy(self.masks[0][3]), 2)), axis=2)
+        x = F.leaky_relu(self.conv_11(x), negative_slope=0.1)
 
-    def forward(self, x):
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x,_ = torch.max(x, 1)
-        x = F.relu(self.fc3(x))
-        x = F.relu(self.fc4(x))
-        x = F.relu(self.fc5(x))
-        x,_ = torch.max(x, 1)
-        x = F.relu(self.fc6(x))
-        x = F.relu(self.fc7(x))
+        x = torch.index_select(x, 0, torch.from_numpy(self.masks[0][1]))
+        x = torch.cat((x, torch.unsqueeze(torch.from_numpy(self.masks[0][3]), 2)), axis=2)
+        x = F.leaky_relu(self.conv_12(x), negative_slope=0.1)
+
+        x = torch.index_select(x, 0, torch.from_numpy(self.masks[1][2]))
+        torch.unsqueeze(torch.from_numpy(self.masks[1][4]), 2)
+
+
+
+        pool_input = tf.gather_nd(input_tensor, tf.expand_dims(index_tensor, axis=2))
+        broadcast_mask = tf.tile(tf.expand_dims(pool_mask, axis=2),
+                             tf.stack([1, 1, tf.shape(pool_input)[2]]))
+        return tf.reduce_sum(pool_input * broadcast_mask, axis=1)
+
+        return x
+
 
 
 #OUR METHOD
@@ -290,7 +303,8 @@ class AE_AtlasNet(nn.Module):
 
 
 class TangConv_AtlasNet(nn.Module):
-    def __init__(self, num_points = 2048, bottleneck_size = 1024, nb_primitives = 1):
+    def __init__(self, num_points = 2500, bottleneck_size = 1024, nb_primitives = 1,
+                 ):
         super(AE_AtlasNet, self).__init__()
         self.num_points = num_points
         self.bottleneck_size = bottleneck_size

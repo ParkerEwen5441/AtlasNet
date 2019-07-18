@@ -30,6 +30,8 @@ class param:
 		self.interp_method = config['pre_interp_method']
 		self.noise_level = config['pre_noise_level']
 
+		self.output_dir = '/home/parker/datasets/'
+
 
 def run_precompute():
 	p = param()
@@ -58,6 +60,10 @@ def run_precompute():
 				pcd_colors_down = voxel_down_sample_for_surface_conv(pcd_colors, multiplier*p.min_cube_size,
 					min_bound, max_bound, False)
 
+				# print(np.asarray(pcd_colors))
+				# print(np.asarray(pcd_colors_down.point_cloud))
+				# input('CHECK DOWNSIZED SHAPE')
+
 				method = depth_densify_nearest_neighbor
 
 				parametrization = planar_parametrization(pcd_colors_down.point_cloud,
@@ -65,6 +71,11 @@ def run_precompute():
 							PlanarParameterizationOption(
 							sigma = 1, number_of_neighbors=p.num_neighbors, half_patch_size=p.filter_size//2,
 							depth_densify_method = method))
+
+				print('Conv_ind: {}'.format(parametrization.index[0].shape))
+				print('Pool_ind_ind: {}'.format(pcd_colors_down.cubic_id.shape))
+				print('Depth: {}'.format(parametrization.depth.data.shape))
+				input('EXAMINE')
 
 				item_name = scan_name.split('.')[0]
 				if not os.path.exists(os.path.join(p.output_dir, cat)):
@@ -77,19 +88,6 @@ def run_precompute():
 						nn_conv_ind=parametrization.index[0],
 						pool_ind=pcd_colors_down.cubic_id,
 						depth=parametrization.depth.data)
-
-				# data = np.load(os.path.join(p.output_dir, cat, item_name, 'scale_' + str(i) + '.npz'))
-				# lst = data.files
-				# for item in lst:
-				#     print(item)
-				#     print(data[item])
-				    # input("WAIT")
-				# print("Scale:{}".format(str(i)))
-				# print(data['points'].shape)
-				# print(data['nn_conv_ind'].shape)
-				# print(data['pool_ind'].shape)
-				# print(data['depth'].shape)
-				# input("CHECK HERE FOR TANG IMAGE")
 
 				sys.stdout.flush()
 
