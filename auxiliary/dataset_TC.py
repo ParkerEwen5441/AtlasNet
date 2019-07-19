@@ -20,7 +20,8 @@ from py3d import *
 class TangConvShapeNet(data.Dataset):
     def __init__(self, root="/home/parker/datasets/TangConv", class_choice="couch",
                  train = True, npoints=2500, normal=False, balanced=False,
-                 gen_view=False, SVR=False, idx=0):
+                 gen_view=False, SVR=False, idx=0, num_scales=3, max_points=2500,
+                 input_channels=3):
         self.balanced = balanced
         self.normal = normal
         self.train = train
@@ -33,10 +34,10 @@ class TangConvShapeNet(data.Dataset):
         self.SVR = SVR
         self.gen_view = gen_view
         self.idx=idx
-        self.num_scales = 3
+        self.num_scales = num_scales
         self.training_data = []
-        self.max_points = 2500
-        self.input_channels = 3
+        self.max_points = max_points
+        self.input_channels = input_channels
 
         # From catfile, get chosen categories we want to use
         with open(self.catfile, 'r') as f:
@@ -110,17 +111,17 @@ class TangConvShapeNet(data.Dataset):
 
         scale = []
         scale.append([s.clouds[0], s.conv_ind[0], s.pool_ind[0], s.depth[0], s.pool_mask[0]])
-        scale.append([s.clouds[1], s.conv_ind[1], s.pool_ind[1], s.depth[1], s.pool_mask[0]])
-        scale.append([s.clouds[2], s.conv_ind[2], s.pool_ind[2], s.depth[2], s.pool_mask[0]])
+        scale.append([s.clouds[1], s.conv_ind[1], s.pool_ind[1], s.depth[1], s.pool_mask[1]])
+        scale.append([s.clouds[2], s.conv_ind[2], s.pool_ind[2], s.depth[2], s.pool_mask[2]])
 
         # print(np.asarray(scale[0][0].normals))
         # print(np.asarray(scale[0][0].normals).shape)
         # print(np.asarray(scale[0][0].normals).shape)
         # print(scale[2][1].shape)
-        # print(scale[2][2].shape)
+        # print(scale[1][2].shape)
         # print(scale[2][3].shape)
-        print(scale[0][4])
-        input('CHECK PCD')
+        # print(scale[1][4].shape)
+        # input('CHECK PCD')
 
         point_set = torch.from_numpy(np.asarray(s.clouds[0].points))
 
