@@ -134,6 +134,7 @@ class TangentConv(nn.Module):
         super(TangentConv, self).__init__()
         self.num_points = num_points
         self.masks = masks
+        ## INPUT SHOULD BE x.NORMALS
 
         self.conv_11 = torch.nn.Conv2d(input_channels, 32, (9, input_channels, 32))
         self.conv_12 = torch.nn.Conv2d(32, 32, (9, 32, 32))
@@ -152,7 +153,7 @@ class TangentConv(nn.Module):
 
         # Tangent Convolution Layer 2
         x = torch.index_select(x, 0, torch.from_numpy(self.masks[0][1]))
-        x = torch.cat((x, torch.unsqueeze(torch.from_numpy(self.masks[0][3]), 2)), axis=2)
+        x = torch.cat((x, torch.unsqueezResizee(torch.from_numpy(self.masks[0][3]), 2)), axis=2)
         x = F.leaky_relu(self.conv_12(x), negative_slope=0.1)
         print(x.shape)
         input('TANGCONV SECOND LAYER')
