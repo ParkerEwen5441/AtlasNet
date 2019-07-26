@@ -114,16 +114,8 @@ class TangConvShapeNet(data.Dataset):
         scale.append([s.clouds[1], s.conv_ind[1], s.pool_ind[1], s.depth[1], s.pool_mask[1]])
         scale.append([s.clouds[2], s.conv_ind[2], s.pool_ind[2], s.depth[2], s.pool_mask[2]])
 
-        # print(np.asarray(scale[0][0].normals))
-        # print(np.asarray(scale[0][0].normals).shape)
-        # print(np.asarray(scale[0][0].normals).shape)
-        # print(scale[2][1].shape)
-        # print(scale[1][2].shape)
-        # print(scale[2][3].shape)
-        # print(scale[1][4].shape)
-        # input('CHECK PCD')
-
-        point_set = torch.from_numpy(np.asarray(s.clouds[0].points))
+        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        normals = torch.from_numpy(np.asarray(s.clouds[0].normals)).to(device)
 
         # return[0] : masks and other params for all scales
         #       [1] : Point set from point cloud .plc file
@@ -133,7 +125,7 @@ class TangConvShapeNet(data.Dataset):
         #       [x] : path to the normalized_model drir in ShapeNetCorev2
 
         # return data, point_set.contiguous(), fn[1], fn[2], fn[3]
-        return scale, point_set.contiguous(), fn[2], fn[3]
+        return scale, normals.contiguous(), fn[2], fn[3]
 
 
     def __len__(self):
@@ -145,7 +137,3 @@ if __name__  == '__main__':
 
     d  =  TangConvShapeNet(class_choice =  None, balanced= False, train=True, npoints=2500)
     d.__getitem__(50)
-    # a = len(d)
-    # d  =  TangConvShapeNet(class_choice =  None, balanced= False, train=False, npoints=2500)
-    # a = a + len(d)
-    # print(a)
