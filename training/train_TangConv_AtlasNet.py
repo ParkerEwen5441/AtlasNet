@@ -3,9 +3,10 @@ import argparse
 import random
 import numpy as np
 import torch
+import torch.multiprocessing as mp
 import torch.optim as optim
 import sys
-sys.path.append('./auxiliary/')
+sys.path.append('/home/parker/code/AtlasNet/auxiliary/')
 from dataset_TC import *
 from dataset import *
 from model import *
@@ -35,7 +36,7 @@ print (opt)
 # =============DEFINE CHAMFER LOSS========================== #
 # ========================================================== #
 if opt.accelerated_chamfer:
-    sys.path.append("./extension/")
+    sys.path.append("/home/parker/code/AtlasNet/extension/")
     import dist_chamfer as ext
     distChamfer =  ext.chamferDist()
 
@@ -73,7 +74,7 @@ else:
 vis = visdom.Visdom(port = 8888, env=opt.env)
 now = datetime.datetime.now()
 save_path = now.isoformat()
-dir_name =  os.path.join('log', save_path)
+dir_name =  os.path.join('/home/parker/code/AtlasNet/log', save_path)
 if not os.path.exists(dir_name):
     os.mkdir(dir_name)
 logname = os.path.join(dir_name, 'log.txt')
@@ -83,7 +84,8 @@ blue = lambda x:'\033[94m' + x + '\033[0m'
 opt.manualSeed = random.randint(1, 10000) # fix seed
 print("Random Seed: ", opt.manualSeed)
 random.seed(opt.manualSeed)
-torch.manual_seed(opt.manualSeed)
+# mp.set_start_method('spawn')
+# torch.manual_seed(opt.manualSeed)
 best_val_loss = 10
 
 # ========================================================== #
@@ -104,7 +106,7 @@ len_dataset = len(dataset)
 # ========================================================== #
 # ===================CREATE network========================= #
 # ========================================================== #
-network = TangConv_AtlasNet(num_points = opt.num_points, nb_primitives = opt.nb_primitives)
+network = TangConv_AtlasNet(num_points=opt.num_points, nb_primitives=opt.nb_primitives)
 network.cuda() #put network on GPU
 network.apply(weights_init) #initialization of the weight
 
@@ -148,10 +150,16 @@ for epoch in range(opt.nepoch):
 
     for i, data in enumerate(dataloader, 0):
         optimizer.zero_grad()
-        # img, points, cat, _, _ = data
         masks, points, _, _ = data
-        points = points.transpose(2,1).contiguous()
+
+        # points = points.transpose(2,1).contiguous()
+
+        # Transform input and mask tensors into cuda tensors
         points = points.cuda()
+        for scale in range(3):
+            for idx in range(5):
+                masks[scale][idx] = masks[scale][idx].cuda()
+
         #SUPER_RESOLUTION optionally reduce the size of the points fed to PointNet
         points = points[:,:,:opt.super_points].contiguous()
         #END SUPER RESOLUTION

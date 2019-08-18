@@ -18,7 +18,7 @@ from cloud import ScanData
 from py3d import *
 
 class TangConvShapeNet(data.Dataset):
-    def __init__(self, root="/home/parker/datasets/TangConv", class_choice="couch",
+    def __init__(self, root="/home/parker/datasets/TangConvNewTest", class_choice="couch",
                  train = True, npoints=2500, normal=False, balanced=False,
                  gen_view=False, SVR=False, idx=0, num_scales=3, max_points=2500,
                  input_channels=3):
@@ -102,6 +102,7 @@ class TangConvShapeNet(data.Dataset):
         s.load(fn[0], self.num_scales)
         s.remap_depth()
         s.remap_normals()
+
         if np.asarray(s.clouds[0].normals).shape[0] < self.max_points:
             s.resize(self.max_points)
         else:
@@ -110,12 +111,11 @@ class TangConvShapeNet(data.Dataset):
             s.remap_normals()
 
         scale = []
-        scale.append([s.clouds[0], s.conv_ind[0], s.pool_ind[0], s.depth[0], s.pool_mask[0]])
-        scale.append([s.clouds[1], s.conv_ind[1], s.pool_ind[1], s.depth[1], s.pool_mask[1]])
-        scale.append([s.clouds[2], s.conv_ind[2], s.pool_ind[2], s.depth[2], s.pool_mask[2]])
+        scale.append([np.asarray(s.clouds[0].points), s.conv_ind[0], s.pool_ind[0], s.depth[0], s.pool_mask[0]])
+        scale.append([np.asarray(s.clouds[1].points), s.conv_ind[1], s.pool_ind[1], s.depth[1], s.pool_mask[1]])
+        scale.append([np.asarray(s.clouds[2].points), s.conv_ind[2], s.pool_ind[2], s.depth[2], s.pool_mask[2]])
 
-        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        normals = torch.from_numpy(np.asarray(s.clouds[0].normals)).to(device)
+        normals = torch.from_numpy(np.asarray(s.clouds[0].normals))
 
         # return[0] : masks and other params for all scales
         #       [1] : Point set from point cloud .plc file
@@ -132,8 +132,13 @@ class TangConvShapeNet(data.Dataset):
         return len(self.datapath)
 
 
-
 if __name__  == '__main__':
 
     d  =  TangConvShapeNet(class_choice =  None, balanced= False, train=True, npoints=2500)
-    d.__getitem__(50)
+    masks, normals, _, _ = d.__getitem__(50)
+    print(masks[0][0].shape)
+    print(masks[0][1].shape)
+    print(masks[0][2].shape)
+    print(masks[0][3].shape)
+    print(masks[0][4].shape)
+    print(normals.shape)

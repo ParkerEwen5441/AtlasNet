@@ -5,6 +5,7 @@ import json
 import shutil
 import inspect
 import numpy as np
+import open3d as o3d
 
 open3d_path = '/home/parker/packages/Open3D/build/lib/'
 tc_path = '/home/parker/code/AtlasNet/'
@@ -56,10 +57,6 @@ def run_precompute():
 				multiplier = pow(2, i)
 				pcd_colors_down = voxel_down_sample_for_surface_conv(pcd_colors, multiplier*p.min_cube_size,
 					min_bound, max_bound, False)
-
-				# print(np.asarray(pcd_colors))
-				# print(np.asarray(pcd_colors_down.point_cloud))
-				# input('CHECK DOWNSIZED SHAPE')
 
 				method = depth_densify_nearest_neighbor
 
