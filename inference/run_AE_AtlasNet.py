@@ -18,7 +18,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--batchSize', type=int, default=1, help='input batch size')
 parser.add_argument('--workers', type=int, help='number of data loading workers', default=6)
 parser.add_argument('--model', type=str, default = 'trained_models/ae_atlasnet_25.pth',  help='yuor path to the trained model')
-parser.add_argument('--num_points', type=int, default = 2500,  help='number of points fed to poitnet')
+parser.add_argument('--num_points', type=int, default = 2500,  help='number of points fed to pointnet')
 parser.add_argument('--gen_points', type=int, default = 2500,  help='number of points to generate, put 30000 for high quality mesh, 2500 for quantitative comparison with the baseline')
 parser.add_argument('--nb_primitives', type=int, default = 25,  help='number of primitives')
 

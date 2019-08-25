@@ -84,14 +84,22 @@ class ScanData():
             empty_pool_ind = np.zeros([num_points, self.pool_ind[i].shape[1]])
             empty_pool_mask = np.zeros([num_points, self.pool_mask[i].shape[1]])
 
-            empty_points[:np.asarray(self.clouds[i].points).shape[0],
-                          :np.asarray(self.clouds[i].points).shape[1]] = np.asarray(self.clouds[i].points)
-            empty_normals[:np.asarray(self.clouds[i].normals).shape[0],
-                          :np.asarray(self.clouds[i].normals).shape[1]] = np.asarray(self.clouds[i].normals)
-            empty_conv_ind[:self.conv_ind[i].shape[0], :self.conv_ind[i].shape[1]] = self.conv_ind[i]
-            empty_depth[:self.depth[i].shape[0], :self.depth[i].shape[1]] = self.depth[i]
-            empty_pool_ind[:self.pool_ind[i].shape[0], :self.pool_ind[i].shape[1]] = self.pool_ind[i]
-            empty_pool_mask[:self.pool_mask[i].shape[0], :self.pool_mask[i].shape[1]] = self.pool_mask[i]
+            if np.asarray(self.clouds[i].points).shape[0] <= num_points:
+                empty_points[:np.asarray(self.clouds[i].points).shape[0],
+                              :np.asarray(self.clouds[i].points).shape[1]] = np.asarray(self.clouds[i].points)
+                empty_normals[:np.asarray(self.clouds[i].normals).shape[0],
+                              :np.asarray(self.clouds[i].normals).shape[1]] = np.asarray(self.clouds[i].normals)
+                empty_conv_ind[:self.conv_ind[i].shape[0], :self.conv_ind[i].shape[1]] = self.conv_ind[i]
+                empty_depth[:self.depth[i].shape[0], :self.depth[i].shape[1]] = self.depth[i]
+                empty_pool_ind[:self.pool_ind[i].shape[0], :self.pool_ind[i].shape[1]] = self.pool_ind[i]
+                empty_pool_mask[:self.pool_mask[i].shape[0], :self.pool_mask[i].shape[1]] = self.pool_mask[i]
+            else:
+                empty_points[:num_points, :3] = np.asarray(self.clouds[i].points)[:num_points, :]
+                empty_normals[:num_points, :3] = np.asarray(self.clouds[i].normals)[:num_points, :]
+                empty_conv_ind[:self.conv_ind[i].shape[0], :self.conv_ind[i].shape[1]] = self.conv_ind[i][:num_points, :]
+                empty_depth[:self.depth[i].shape[0], :self.depth[i].shape[1]] = self.depth[i][:num_points, :]
+                empty_pool_ind[:self.pool_ind[i].shape[0], :self.pool_ind[i].shape[1]] = self.pool_ind[i][:num_points, :]
+                empty_pool_mask[:self.pool_mask[i].shape[0], :self.pool_mask[i].shape[1]] = self.pool_mask[i][:num_points, :]
 
             cloud.points = Vector3dVector(empty_points)
             cloud.normals = Vector3dVector(empty_normals)

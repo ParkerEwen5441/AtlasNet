@@ -10,7 +10,7 @@ from utils import *
 
 
 class ShapeNet(data.Dataset):
-    def __init__(self, rootimg = "./data/ShapeNet/ShapeNetRendering", rootpc = "./data/customShapeNet" , class_choice = "chair", train = True, npoints = 2500, normal = False, balanced = False, gen_view=False, SVR=False, idx=0):
+    def __init__(self, rootimg = "../data/ShapeNet/ShapeNetRendering", rootpc = "../data/customShapeNet" , class_choice = "chair", train = True, npoints = 2500, normal = False, balanced = False, gen_view=False, SVR=False, idx=0):
         self.balanced = balanced
         self.normal = normal
         self.train = train
@@ -18,7 +18,7 @@ class ShapeNet(data.Dataset):
         self.rootpc = rootpc
         self.npoints = npoints
         self.datapath = []
-        self.catfile = os.path.join('./data/synsetoffset2category.txt')
+        self.catfile = os.path.join('../data/synsetoffset2category.txt')
         self.cat = {}
         self.meta = {}
         self.SVR = SVR

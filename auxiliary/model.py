@@ -130,23 +130,22 @@ class PointNetfeatNormal(nn.Module):
 
 
 class TangentConv(nn.Module):
-    # def __init__(self, masks, num_points = 2500, input_channels = 4, filter_size = 9):
     def __init__(self, num_points = 2500, input_channels = 4, filter_size = 9):
         super(TangentConv, self).__init__()
         self.num_points = num_points
-        # self.masks = masks
 
         self.conv_11 = torch.nn.Conv2d(input_channels, 32, (1, 9))
         self.conv_12 = torch.nn.Conv2d(32, 32, (1, 9))
         self.conv_21 = torch.nn.Conv2d(33, 64, (1, 9))
         self.conv_22 = torch.nn.Conv2d(64, 64, (1, 9))
-        self.conv_31 = torch.nn.Conv2d(65, 128, (1, 9))
-        self.conv_latent = torch.nn.Conv2d(128, 1, (1, 1))
+        self.conv_latent = torch.nn.Conv2d(64, 1, (1, 1))
+        # self.conv_31 = torch.nn.Conv2d(65, 128, (1, 9))
+        # self.conv_latent = torch.nn.Conv2d(128, 1, (1, 1))
 
     def forward(self, x, masks):
         '''
         Tangent Convolution Encoder network.
-        :params: x     : normals from PointCloud object (numpy array 2500x3)
+        :params: x     : normals from PointCloud object (numpy array batch_sizex2500x3)
                  masks : Convolution and Pooling indices as well as Pooling mask and
                             depth layer, all from Tangent Convolutions precomputing
                             step (numpy arrays)
@@ -155,14 +154,14 @@ class TangentConv(nn.Module):
 
         ### Tangent Convolution Layer 1
         x = self.tangconv(x, masks[0][1], masks[0][3])
-        x = F.leaky_relu(self.conv_11(x.unsqueeze(0)), negative_slope=0.1)
+        x = F.leaky_relu(self.conv_11(x), negative_slope=0.1)
         x = torch.transpose(x, 1, 2).squeeze()
         # print(x.shape)
         # input('TANGCONV FIRST LAYER')
 
         ### Tangent Convolution Layer 2
         x = self.tangconv(x, masks[0][1])
-        x = F.leaky_relu(self.conv_12(x.unsqueeze(0)), negative_slope=0.1)
+        x = F.leaky_relu(self.conv_12(x), negative_slope=0.1)
         x = torch.transpose(x, 1, 2).squeeze()
         # print(x.shape)
         # input('TANGCONV SECOND LAYER')
@@ -174,36 +173,34 @@ class TangentConv(nn.Module):
 
         ### Tangent Convolution Layer 3
         x = self.tangconv(x, masks[1][1], masks[1][3])
-        x = F.leaky_relu(self.conv_21(x.unsqueeze(0)), negative_slope=0.1)
+        x = F.leaky_relu(self.conv_21(x), negative_slope=0.1)
         x = torch.transpose(x, 1, 2).squeeze()
         # print(x.shape)
         # input('TANGCONV THIRD LAYER')
 
         ### Tangent Convolution Layer 4
         x = self.tangconv(x, masks[1][1])
-        x = F.leaky_relu(self.conv_22(x.unsqueeze(0)), negative_slope=0.1)
+        x = F.leaky_relu(self.conv_22(x), negative_slope=0.1)
         x = torch.transpose(x, 1, 2).squeeze()
         # print(x.shape)
         # input('TANGCONV FOURTH LAYER')
 
         ### Tangent Pooling Layer 2
-        # Maybe unsqueeze first
-        x = self.tangpool(x, masks[2][2], masks[2][4])
+        # x = self.tangpool(x, masks[2][2], masks[2][4])
         # print(x.shape)
         # input('TANGCONV SECOND POOL')
 
         ### Tangent Convolution Layer 5
-        x = self.tangconv(x, masks[2][1], masks[2][3])
-        x = F.leaky_relu(self.conv_31(x.unsqueeze(0)), negative_slope=0.1)
-        x = torch.transpose(x, 1, 2).squeeze()
+        # x = self.tangconv(x, masks[2][1], masks[2][3])
+        # x = F.leaky_relu(self.conv_31(x), negative_slope=0.1)
+        # x = torch.transpose(x, 1, 2).squeeze()
         # print(x.shape)
         # input('TANGCONV FIFTH LAYER')
 
         ### Bring to latent representation (num_points/4, 1) size
-        x = self.latentconv(x)
-        x = F.leaky_relu(self.conv_latent(x.unsqueeze(0)), negative_slope=0.1)
-        x = x.squeeze()
-        x = torch.transpose(x.unsqueeze(1), 0, 1)
+        x = torch.transpose(torch.unsqueeze(x, 1), 1, 3)
+        x = F.leaky_relu(self.conv_latent(x), negative_slope=0.1)
+        x = torch.transpose(x.squeeze().unsqueeze(2), 1, 2)
         # print(x.shape)
         # input('LATENT LAYER')
 
@@ -213,44 +210,45 @@ class TangentConv(nn.Module):
     def tangconv(self, x, conv_ind, depth=None):
         conv_ind = torch.cuda.LongTensor(conv_ind.long())
 
-        M = torch.empty(conv_ind.shape[0], conv_ind.shape[1], x.shape[1]).cuda()
-        print(x.size())
-        print(M.size())
-        input()
+        # M = torch.empty(x.shape[0], x.shape[1], conv_ind.shape[2], x.shape[2]).cuda()
 
-        for i in range(0, M.shape[0]):
-            for j in range(0, M.shape[1]):
-                M[i, j, :] = x[conv_ind[i, j], :]
+        # for i in range(0, M.shape[0]):
+        #     for j in range(0, M.shape[1]):
+        #         for k in range(0, M.shape[2]):
+        #             M[i, j, k, :] = x[i, conv_ind[i, j, k], :]
+
+
+        # a = np.asarray(conv_ind.cpu())
+        M = x[np.arange(0, conv_ind.shape[0])[:, None, None], conv_ind]
+        M = torch.cuda.FloatTensor(M.float())
 
         if depth is not None:
-            depth = torch.cuda.FloatTensor(depth)
-            x = torch.cat((M, torch.unsqueeze(depth, 2)), dim=2)
+            depth = torch.cuda.FloatTensor(depth.float())
+            x = torch.cat((M, torch.unsqueeze(depth, 3)), dim=3)
         else:
             x = M
 
-        x = torch.transpose(torch.transpose(x, 0, 1), 0, 2)
+        x = torch.transpose(torch.transpose(x, 2, 3), 1, 2)
 
         return x
 
     def tangpool(self, x, pool_ind, pool_mask):
-        pool_input = torch.empty(pool_ind.shape[0], pool_ind.shape[1], x.shape[1]).cuda()
-        for i in range(0, pool_input.shape[0]):
-            for j in range(0, pool_input.shape[1]):
-                if pool_ind[i, j] == -1:
-                    pool_input[i, j, :] = 0
-                else:
-                    pool_input[i, j, :] = x[int(pool_ind[i, j]), :]
+        # pool_input = torch.empty(x.shape[0], pool_ind.shape[1], pool_ind.shape[2], x.shape[2]).cuda()
 
-        # broadcast_input = torch.unsqueeze(torch.from_numpy(pool_mask).cuda(), 2)
-        # broadcast_mask = broadcast_input.repeat(1, 1, pool_input.shape[2])
+        # for i in range(0, pool_input.shape[0]):
+        #     for j in range(0, pool_input.shape[1]):
+        #         for k in range(0, pool_input.shape[2]):
+        #             if pool_ind[i, j, k] == -1:
+        #                 pool_input[i, j, k, :] = 0
+        #             else:
+        #                 pool_input[i, j, k, :] = x[i, int(pool_ind[i, j, k]), :]
 
-        # x = torch.sum(x * broadcast_mask, dim=1)
-        x = torch.sum(pool_input, dim=1)
+        zeros = torch.zeros([x.shape[0], 1, x.shape[2]]).cuda()
+        x = torch.cat((x, zeros), dim=1)
 
-        return x
+        pool_input = x[np.arange(0, pool_ind.shape[0])[:, None, None], pool_ind]
 
-    def latentconv(self, x):
-        x = torch.transpose(torch.unsqueeze(x, 2), 0, 1)
+        x = torch.sum(pool_input, dim=2)
 
         return x
 
@@ -398,37 +396,35 @@ class AE_AtlasNet(nn.Module):
 
 
 class TangConv_AtlasNet(nn.Module):
-    # def __init__(self, masks, num_points = 2500, bottleneck_size = 1024,
-    #              nb_primitives = 1):
     def __init__(self, num_points = 2500, bottleneck_size = 1024,
                  nb_primitives = 1):
         super(TangConv_AtlasNet, self).__init__()
-        # self.masks = mask
         self.num_points = num_points
         self.bottleneck_size = bottleneck_size
         self.nb_primitives = nb_primitives
-        # self.encoder = nn.Sequential(TangentConv(num_points=2500, input_channels=4, filter_size=9),
-        #                               nn.Linear(self.num_points//4, self.bottleneck_size),
-        #                               nn.BatchNorm1d(self.bottleneck_size),
-        #                               nn.ReLU()
-        #                             )
+
         self.encoder = TangentConv(num_points=2500, input_channels=4, filter_size=9)
-        self.postencoder = nn.Sequential(nn.Linear(self.num_points//4, self.bottleneck_size),
-                                         nn.BatchNorm1d(self.bottleneck_size),
-                                         nn.ReLU()
-                                        )
+        # self.postencoder = nn.Sequential(nn.Linear(self.num_points//2, self.bottleneck_size),
+        #                                  nn.BatchNorm1d(self.bottleneck_size),
+        #                                  nn.ReLU()
+        #                                 )
+        self.encoderlin = nn.Linear(self.num_points//2, self.bottleneck_size)
+        self.encoderbn = nn.BatchNorm1d(self.bottleneck_size)
         self.decoder = nn.ModuleList([PointGenCon(bottleneck_size=2+self.bottleneck_size)
                                       for i in range(0, self.nb_primitives)])
 
 
     def forward(self, x, masks):
         x = self.encoder(x, masks)
-        x = self.postencoder(x)
+        x = self.encoderlin(x)
+        x = self.encoderbn(torch.transpose(x, 1, 2))
+
         outs = []
         for i in range(0,self.nb_primitives):
             rand_grid = Variable(torch.cuda.FloatTensor(x.size(0),2,self.num_points//self.nb_primitives))
             rand_grid.data.uniform_(0,1)
-            y = x.unsqueeze(2).expand(x.size(0),x.size(1), rand_grid.size(2)).contiguous()
+            # y = x.unsqueeze(2).expand(x.size(0),x.size(1), rand_grid.size(2)).contiguous()
+            y = x.expand(x.size(0),x.size(1), rand_grid.size(2)).contiguous()
             y = torch.cat( (rand_grid, y), 1).contiguous()
             outs.append(self.decoder[i](y))
         return torch.cat(outs,2).contiguous().transpose(2,1).contiguous()

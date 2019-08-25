@@ -91,6 +91,11 @@ class TangConvShapeNet(data.Dataset):
             for fn in self.meta[item]:
                 self.datapath.append(fn)
 
+        self.perCatValueMeter = {}
+
+        for item in self.cat:
+            self.perCatValueMeter[item] = AverageValueMeter()
+
 
     def __getitem__(self, index):
         fn = self.datapath[index]
@@ -111,9 +116,9 @@ class TangConvShapeNet(data.Dataset):
             s.remap_normals()
 
         scale = []
-        scale.append([np.asarray(s.clouds[0].points), s.conv_ind[0], s.pool_ind[0], s.depth[0], s.pool_mask[0]])
-        scale.append([np.asarray(s.clouds[1].points), s.conv_ind[1], s.pool_ind[1], s.depth[1], s.pool_mask[1]])
-        scale.append([np.asarray(s.clouds[2].points), s.conv_ind[2], s.pool_ind[2], s.depth[2], s.pool_mask[2]])
+        scale.append([np.asarray(s.clouds[0].points), s.conv_ind[0], s.pool_ind[0].astype(int), s.depth[0], s.pool_mask[0]])
+        scale.append([np.asarray(s.clouds[1].points), s.conv_ind[1], s.pool_ind[1].astype(int), s.depth[1], s.pool_mask[1]])
+        scale.append([np.asarray(s.clouds[2].points), s.conv_ind[2], s.pool_ind[2].astype(int), s.depth[2], s.pool_mask[2]])
 
         normals = torch.from_numpy(np.asarray(s.clouds[0].normals))
 

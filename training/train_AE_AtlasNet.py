@@ -5,7 +5,7 @@ import numpy as np
 import torch
 import torch.optim as optim
 import sys
-sys.path.append('./auxiliary/')
+sys.path.append('/home/parker/code/AtlasNet/auxiliary/')
 from dataset import *
 from model import *
 from utils import *
@@ -54,6 +54,9 @@ else:
 
     def distChamfer(a,b):
         x,y = a,b
+        print(x.shape)
+        print(y.shape)
+        input()
         bs, num_points, points_dim = x.size()
         xx = torch.bmm(x, x.transpose(2,1))
         yy = torch.bmm(y, y.transpose(2,1))
@@ -70,7 +73,7 @@ else:
 vis = visdom.Visdom(port = 8888, env=opt.env)
 now = datetime.datetime.now()
 save_path = now.isoformat()
-dir_name =  os.path.join('log', save_path)
+dir_name =  os.path.join('/home/parker/code/AtlasNet/log', save_path)
 if not os.path.exists(dir_name):
     os.mkdir(dir_name)
 logname = os.path.join(dir_name, 'log.txt')
@@ -148,6 +151,9 @@ for epoch in range(opt.nepoch):
         points = points.cuda()
         #SUPER_RESOLUTION optionally reduce the size of the points fed to PointNet
         points = points[:,:,:opt.super_points].contiguous()
+
+        print(points.transpose(2,1).contiguous()[0])
+        input()
         #END SUPER RESOLUTION
         pointsReconstructed  = network(points) #forward pass
         dist1, dist2 = distChamfer(points.transpose(2,1).contiguous(), pointsReconstructed) #loss function
