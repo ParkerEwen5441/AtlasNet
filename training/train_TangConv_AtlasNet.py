@@ -8,10 +8,8 @@ import torch.optim as optim
 import sys
 sys.path.append('/home/parker/code/AtlasNet/auxiliary/')
 from dataset_TC import *
-from dataset import *
 from model import *
 from utils import *
-from ply import *
 import os
 import json
 import time, datetime
@@ -21,7 +19,7 @@ import visdom
 parser = argparse.ArgumentParser()
 parser.add_argument('--batchSize', type=int, default=8, help='input batch size')
 parser.add_argument('--workers', type=int, default=12, help='number of data loading workers')
-parser.add_argument('--nepoch', type=int, default=100, help='number of epochs to train for')
+parser.add_argument('--nepoch', type=int, default=40, help='number of epochs to train for')
 parser.add_argument('--model', type=str, default='',  help='optional reload model path')
 parser.add_argument('--num_points', type=int, default=2500,  help='number of points')
 parser.add_argument('--nb_primitives', type=int, default=25,  help='number of primitives in the atlas')
@@ -145,16 +143,11 @@ for epoch in range(opt.nepoch):
     network.train()
 
     # learning rate schedule
-    if epoch==50:
+    if epoch==20:
         optimizer = optim.Adam(network.parameters(), lr = lrate/10.0)
 
     try:
         for i, data in enumerate(dataloader, 0):
-            ### TAKE OUT LATER###
-            # if i == 100:
-            #     break
-            ####################
-
             optimizer.zero_grad()
             masks, normals, _, _ = data
 
