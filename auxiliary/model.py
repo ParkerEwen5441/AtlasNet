@@ -86,7 +86,7 @@ class TangentConv(nn.Module):
             x = torch.cat((M, torch.unsqueeze(depth, 3)), dim=3)
         else:
             x = M
-
+            
         x = torch.transpose(torch.transpose(x, 2, 3), 1, 2)
 
         return x
@@ -94,7 +94,6 @@ class TangentConv(nn.Module):
     def tangpool(self, x, pool_ind, pool_mask):
         zeros = torch.zeros([x.shape[0], 1, x.shape[2]]).cuda()
         x = torch.cat((x, zeros), dim=1)
-
         pool_input = x[np.arange(0, pool_ind.shape[0])[:, None, None], pool_ind]
 
         x = torch.sum(pool_input, dim=2)
