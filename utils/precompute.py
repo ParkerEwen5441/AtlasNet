@@ -5,6 +5,7 @@ import json
 import shutil
 import inspect
 import numpy as np
+import open3d as o3d
 
 open3d_path = '/home/parker/packages/Open3D/build/lib/'
 tc_path = '/home/parker/code/AtlasNet/'
@@ -29,9 +30,6 @@ class param:
 		self.output_dir = config['pre_output_dir']
 		self.interp_method = config['pre_interp_method']
 		self.noise_level = config['pre_noise_level']
-
-		self.output_dir = '/home/parker/datasets/'
-
 
 def run_precompute():
 	p = param()
@@ -60,10 +58,6 @@ def run_precompute():
 				pcd_colors_down = voxel_down_sample_for_surface_conv(pcd_colors, multiplier*p.min_cube_size,
 					min_bound, max_bound, False)
 
-				# print(np.asarray(pcd_colors))
-				# print(np.asarray(pcd_colors_down.point_cloud))
-				# input('CHECK DOWNSIZED SHAPE')
-
 				method = depth_densify_nearest_neighbor
 
 				parametrization = planar_parametrization(pcd_colors_down.point_cloud,
@@ -71,11 +65,6 @@ def run_precompute():
 							PlanarParameterizationOption(
 							sigma = 1, number_of_neighbors=p.num_neighbors, half_patch_size=p.filter_size//2,
 							depth_densify_method = method))
-
-				print('Conv_ind: {}'.format(parametrization.index[0].shape))
-				print('Pool_ind_ind: {}'.format(pcd_colors_down.cubic_id.shape))
-				print('Depth: {}'.format(parametrization.depth.data.shape))
-				input('EXAMINE')
 
 				item_name = scan_name.split('.')[0]
 				if not os.path.exists(os.path.join(p.output_dir, cat)):

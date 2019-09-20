@@ -1,0 +1,363 @@
+TangConv_AtlasNet(
+  (encoder): TangentConv(
+    (conv_11): Conv2d(4, 32, kernel_size=(1, 9), stride=(1, 1))
+    (conv_12): Conv2d(32, 32, kernel_size=(1, 9), stride=(1, 1))
+    (conv_21): Conv2d(33, 64, kernel_size=(1, 9), stride=(1, 1))
+    (conv_22): Conv2d(64, 64, kernel_size=(1, 9), stride=(1, 1))
+    (conv_latent): Conv2d(64, 1, kernel_size=(1, 1), stride=(1, 1))
+  )
+  (encoderlin): Linear(in_features=1250, out_features=1024, bias=True)
+  (encoderbn): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (decoder): ModuleList(
+    (0): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (1): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (2): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (3): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (4): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (5): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (6): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (7): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (8): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (9): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (10): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (11): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (12): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (13): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (14): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (15): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (16): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (17): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (18): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (19): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (20): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (21): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (22): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (23): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (24): PointGenCon(
+      (conv1): Conv1d(1026, 1026, kernel_size=(1,), stride=(1,))
+      (conv2): Conv1d(1026, 513, kernel_size=(1,), stride=(1,))
+      (conv3): Conv1d(513, 256, kernel_size=(1,), stride=(1,))
+      (conv4): Conv1d(256, 3, kernel_size=(1,), stride=(1,))
+      (th): Tanh()
+      (bn1): BatchNorm1d(1026, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn2): BatchNorm1d(513, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (bn3): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+)
+json_stats: {"train_loss": 0.0815540660899299, "val_loss": 0.06638552845953165, "epoch": 0, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.04123498083930425, "bench": 0.06606361071484936, "cabinet": 0.0839519953172257, "car": 0.06929547899389434, "chair": 0.06555158784084164, "monitor": 0.09600554762503512, "lamp": 0.10020289704603666, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.04662542168344434, "val_loss": 0.0439160339025978, "epoch": 1, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.031966454342376674, "bench": 0.03835131866980453, "cabinet": 0.06101176563931528, "car": 0.04408607819085743, "chair": 0.04149345795705908, "monitor": 0.057862689219556576, "lamp": 0.07229017468546432, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.03700561025863048, "val_loss": 0.028977420852597767, "epoch": 2, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.009573858978773633, "bench": 0.023669267466325496, "cabinet": 0.05604991156316642, "car": 0.02994485287411087, "chair": 0.026980807529059587, "monitor": 0.07368274572336954, "lamp": 0.03619981917665452, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.023080509124964663, "val_loss": 0.026538038712440253, "epoch": 3, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.014387461168717773, "bench": 0.020419105965722696, "cabinet": 0.04983077618949263, "car": 0.022892112148213017, "chair": 0.026849127313459734, "monitor": 0.058838299425929635, "lamp": 0.02661195449421374, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.01945311092186401, "val_loss": 0.01619082781053569, "epoch": 4, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.005670731263926525, "bench": 0.017129226588750785, "cabinet": 0.02767425439803458, "car": 0.011672745520626415, "chair": 0.017113725887765923, "monitor": 0.03360890838827837, "lamp": 0.028376298796943342, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.018756272197816604, "val_loss": 0.016235459083955482, "epoch": 5, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.005992908439665641, "bench": 0.013717851074343226, "cabinet": 0.03191034571840955, "car": 0.014381448444104156, "chair": 0.01856530324746542, "monitor": 0.019435192648835278, "lamp": 0.024076789072399497, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.014737097601776128, "val_loss": 0.01414269716905973, "epoch": 6, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.00570903703533718, "bench": 0.015342444948776584, "cabinet": 0.021658393183260002, "car": 0.015075773991929648, "chair": 0.015111088169971153, "monitor": 0.02083615154381932, "lamp": 0.017096905455701902, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.014248140859384658, "val_loss": 0.012715538009446373, "epoch": 7, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0058384927796414875, "bench": 0.01313938158054067, "cabinet": 0.020823286459216963, "car": 0.012192798511118165, "chair": 0.013759289046669038, "monitor": 0.016210433061668656, "lamp": 0.01755638960650947, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.012961943199725528, "val_loss": 0.011436145905862718, "epoch": 8, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.005576615939254664, "bench": 0.010201535872599192, "cabinet": 0.020091265967106295, "car": 0.010544645392986995, "chair": 0.012216648135015641, "monitor": 0.01636342254808615, "lamp": 0.015864077717566774, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.011656436305373417, "val_loss": 0.009713303628295741, "epoch": 9, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.004335568243769827, "bench": 0.009773470818668521, "cabinet": 0.01600187466400458, "car": 0.006639840188797127, "chair": 0.011460137413230416, "monitor": 0.013611046935644721, "lamp": 0.015535068635219392, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.010965688671552908, "val_loss": 0.010108708167499645, "epoch": 10, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0037510943273939114, "bench": 0.008578558704325808, "cabinet": 0.01691695602812425, "car": 0.0057074432638269225, "chair": 0.013476451803588392, "monitor": 0.013254680843978798, "lamp": 0.016373028929307566, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.01060158952169184, "val_loss": 0.009340423653712593, "epoch": 11, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0056875642897405935, "bench": 0.009828857083499832, "cabinet": 0.012749876660673988, "car": 0.008643584790052693, "chair": 0.01015293850187331, "monitor": 0.011966704082766242, "lamp": 0.011751741162110023, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.01014036297896068, "val_loss": 0.009172379722581413, "epoch": 12, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0051230178475899415, "bench": 0.008992493730778149, "cabinet": 0.012301303413590257, "car": 0.009788712940402388, "chair": 0.009810545073089878, "monitor": 0.011021349477042352, "lamp": 0.012153556991747002, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.00989167343518464, "val_loss": 0.009794143386767287, "epoch": 13, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.005920007019996083, "bench": 0.010634812502614171, "cabinet": 0.011397337953068703, "car": 0.009927749688423533, "chair": 0.011027800996486316, "monitor": 0.011522621468686422, "lamp": 0.01071342458338787, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.009578478263659304, "val_loss": 0.008459038113458718, "epoch": 14, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0036276770503380785, "bench": 0.009391816072000231, "cabinet": 0.01125168250673141, "car": 0.006477676224487813, "chair": 0.01032909971779686, "monitor": 0.010122286838536854, "lamp": 0.01375049835073961, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.009510419924638431, "val_loss": 0.007999862227890515, "epoch": 15, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.003695658106613292, "bench": 0.007855228858078742, "cabinet": 0.011158076191939042, "car": 0.005915031963441941, "chair": 0.009927669474627867, "monitor": 0.010176503716016616, "lamp": 0.012114879074809, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.009428865477663766, "val_loss": 0.008151253989523436, "epoch": 16, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.004084484627531644, "bench": 0.00802934753928595, "cabinet": 0.010620322809867543, "car": 0.005557914721846229, "chair": 0.01027120996987074, "monitor": 0.009838233597156763, "lamp": 0.013195235737140043, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.009172806297505208, "val_loss": 0.008065591352385004, "epoch": 17, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.003866436334522205, "bench": 0.008375033848013774, "cabinet": 0.011339133472059672, "car": 0.0058331980570705344, "chair": 0.009559677198218102, "monitor": 0.012141352326093686, "lamp": 0.012173564688843928, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.009346275217967713, "val_loss": 0.008381636321719663, "epoch": 18, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.004598331167271293, "bench": 0.007438444564088928, "cabinet": 0.010455789022240928, "car": 0.007274663391439174, "chair": 0.010201074817945377, "monitor": 0.009350801256668336, "lamp": 0.012153719762736498, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.00939995393447823, "val_loss": 0.011318972033587813, "epoch": 19, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.006403018130425196, "bench": 0.006950158200073133, "cabinet": 0.012608859550773987, "car": 0.015188664774619802, "chair": 0.012949652516677972, "monitor": 0.01028933911651475, "lamp": 0.01331103247790893, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.009227926646685891, "val_loss": 0.009089082336401887, "epoch": 20, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.003841024629633066, "bench": 0.009735928215959578, "cabinet": 0.014010414741882337, "car": 0.004704871812571441, "chair": 0.011203575070905076, "monitor": 0.016525364548742646, "lamp": 0.013910771963813037, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.009080409383896435, "val_loss": 0.007892899729154917, "epoch": 21, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0035988306690547898, "bench": 0.008635411047249927, "cabinet": 0.01186874996034015, "car": 0.0049473049560214855, "chair": 0.009545749271414286, "monitor": 0.010959010598691199, "lamp": 0.012891754907564557, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.009033973492076785, "val_loss": 0.007868918075651904, "epoch": 22, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0036248635920253427, "bench": 0.008031413290850426, "cabinet": 0.00997524483263319, "car": 0.006700359515597729, "chair": 0.0095507985565811, "monitor": 0.009076903498698665, "lamp": 0.01227348339386727, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008882463798720083, "val_loss": 0.007882999435111088, "epoch": 23, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.004055808547136073, "bench": 0.007825109020643404, "cabinet": 0.011073105054674525, "car": 0.0058339282597832075, "chair": 0.009664556550473973, "monitor": 0.009162786983819069, "lamp": 0.01172657564419964, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008728360480820874, "val_loss": 0.00878878662769553, "epoch": 24, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0032697846389307516, "bench": 0.014583353846005726, "cabinet": 0.012829841375269853, "car": 0.005118231768806234, "chair": 0.010223725614304466, "monitor": 0.012089078231121346, "lamp": 0.013428195918760622, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008807877687180018, "val_loss": 0.007499845943471646, "epoch": 25, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.00307754886341924, "bench": 0.008845698954316066, "cabinet": 0.009947637841098188, "car": 0.005066622728051535, "chair": 0.009213322195180016, "monitor": 0.00983537220277775, "lamp": 0.012838484006754247, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.00888578169838086, "val_loss": 0.00780723216845953, "epoch": 26, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0036769625843304033, "bench": 0.007520530695372506, "cabinet": 0.009937580820546488, "car": 0.005809829445880968, "chair": 0.010069694822976594, "monitor": 0.009182627055079808, "lamp": 0.011432149162216774, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.00886773792146171, "val_loss": 0.007668772486810998, "epoch": 27, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0038780651027119748, "bench": 0.008869945462851758, "cabinet": 0.010072341068512528, "car": 0.005371857547770625, "chair": 0.00922793648497316, "monitor": 0.009827568221716064, "lamp": 0.011725439544585362, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008674102180182183, "val_loss": 0.007894109366134373, "epoch": 28, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.004129686706293159, "bench": 0.008212295903065636, "cabinet": 0.01089158128254709, "car": 0.005776899112420585, "chair": 0.009464232146907546, "monitor": 0.010459060844253893, "lamp": 0.011442083576063687, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008490526170540781, "val_loss": 0.007478640952134757, "epoch": 29, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0035516834836910017, "bench": 0.007934069245947206, "cabinet": 0.009454320893957504, "car": 0.005657625249282401, "chair": 0.00921562916772485, "monitor": 0.009306049477243224, "lamp": 0.011569165981492671, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.00883090987939063, "val_loss": 0.008401170144646624, "epoch": 30, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.003920862068909708, "bench": 0.007748391897217333, "cabinet": 0.012559709873678694, "car": 0.006370333909325845, "chair": 0.010361253111443692, "monitor": 0.010361537538867123, "lamp": 0.012427134287267496, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.00860308859352106, "val_loss": 0.00839992601588057, "epoch": 31, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0033135830488263364, "bench": 0.008565337789046907, "cabinet": 0.012329958526080856, "car": 0.004773079076314127, "chair": 0.010974615431488876, "monitor": 0.009611962845984038, "lamp": 0.015532081897428017, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008588071685486295, "val_loss": 0.008701251902723379, "epoch": 32, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0038310575171827906, "bench": 0.007611279171661682, "cabinet": 0.012249092619242266, "car": 0.006447684608407506, "chair": 0.011304366433102083, "monitor": 0.010549450534741382, "lamp": 0.012609041590641086, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008452951320330263, "val_loss": 0.007935662168170217, "epoch": 33, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.00325132536375886, "bench": 0.010895087717364344, "cabinet": 0.01120967051485922, "car": 0.005379088494925261, "chair": 0.00942696349199095, "monitor": 0.011453206572611362, "lamp": 0.011157228998910597, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008517291784782112, "val_loss": 0.007699354442253105, "epoch": 34, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0034913974826169454, "bench": 0.009125246919760271, "cabinet": 0.012204662082771437, "car": 0.005084790494077147, "chair": 0.008966460647760676, "monitor": 0.010833865618172586, "lamp": 0.011815948275640148, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008341496991602016, "val_loss": 0.007637857363683221, "epoch": 35, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0036467249732249477, "bench": 0.007331252744112522, "cabinet": 0.010318238202775637, "car": 0.0058810980750477245, "chair": 0.009382988755968338, "monitor": 0.010042344516638513, "lamp": 0.011408863796941268, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008390800831812241, "val_loss": 0.00746194442198767, "epoch": 36, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0037290642210563033, "bench": 0.006940168031120824, "cabinet": 0.009451851913243428, "car": 0.00607214833518116, "chair": 0.009322550493140914, "monitor": 0.00841264061350051, "lamp": 0.01115013588050874, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008550740911492664, "val_loss": 0.0074641725908141205, "epoch": 37, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0034334364752617997, "bench": 0.009263759010540872, "cabinet": 0.010267163424222759, "car": 0.004948776341723624, "chair": 0.008964815219499917, "monitor": 0.010215010754596264, "lamp": 0.011354174143123003, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008479353038475324, "val_loss": 0.0077116321004576036, "epoch": 38, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.004326039817704702, "bench": 0.00795597011734896, "cabinet": 0.009411382606845518, "car": 0.007077476113026271, "chair": 0.008744116709370368, "monitor": 0.009882168582086147, "lamp": 0.010805555917918775, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008207093766639362, "val_loss": 0.007967834403484286, "epoch": 39, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.004505016512208254, "bench": 0.007879539651865261, "cabinet": 0.010926833743025662, "car": 0.006847470898932589, "chair": 0.008722389295690013, "monitor": 0.012656854499266026, "lamp": 0.010915897459703835, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008417993030577667, "val_loss": 0.0073106521255449025, "epoch": 40, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.003212391729164894, "bench": 0.008015748801687563, "cabinet": 0.009224244022617243, "car": 0.005347103287765546, "chair": 0.009249077557992492, "monitor": 0.009072548581546424, "lamp": 0.011012441639854214, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008387839149168757, "val_loss": 0.007517568593818945, "epoch": 41, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0031590272048361567, "bench": 0.00823047690828843, "cabinet": 0.010141040789340257, "car": 0.005422791239977378, "chair": 0.009192467033890064, "monitor": 0.009641072694851966, "lamp": 0.012774395955814173, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008051154585701315, "val_loss": 0.007492703241132907, "epoch": 42, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0033371225886307176, "bench": 0.007403596258384241, "cabinet": 0.010564240217705908, "car": 0.0058046130583192515, "chair": 0.00919258493930123, "monitor": 0.00902068075812175, "lamp": 0.011851522314679525, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008349109995577456, "val_loss": 0.009085757804759618, "epoch": 43, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.002977988860720044, "bench": 0.009993394764899152, "cabinet": 0.01588633197628976, "car": 0.005686955065795199, "chair": 0.0110787444343295, "monitor": 0.01402564417769139, "lamp": 0.01404563222989445, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008264626251563547, "val_loss": 0.007829571601095422, "epoch": 44, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.004528243132436321, "bench": 0.007669612078402744, "cabinet": 0.01057471294737495, "car": 0.006808298784136225, "chair": 0.008799645205115498, "monitor": 0.010395287319416947, "lamp": 0.01102123851950275, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008242716079830178, "val_loss": 0.00815633905746885, "epoch": 45, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.003884084962925411, "bench": 0.006911000553979447, "cabinet": 0.012386559872194657, "car": 0.005762428285117816, "chair": 0.01014739600220839, "monitor": 0.009861192960720952, "lamp": 0.013431682178141597, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008386894590237346, "val_loss": 0.007551015494422862, "epoch": 46, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0037386616545776637, "bench": 0.008551175849293475, "cabinet": 0.010306381419577695, "car": 0.006601526430764886, "chair": 0.008487782805403698, "monitor": 0.009395041877468266, "lamp": 0.011375480563627362, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0, "val_loss": 0.007588654405531472, "epoch": 47, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0037532957682777685, "bench": 0.008616504665763284, "cabinet": 0.010265612027265562, "car": 0.00663113114761095, "chair": 0.008520402968280941, "monitor": 0.00939679490089804, "lamp": 0.011643722326101039, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008243955330576307, "val_loss": 0.00744646406296884, "epoch": 48, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0035190247867321104, "bench": 0.0070577745331172025, "cabinet": 0.009191018715904454, "car": 0.006058349792239609, "chair": 0.009192802852765768, "monitor": 0.009505016745350894, "lamp": 0.01157569656949848, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.008124503978135685, "val_loss": 0.008419912141762015, "epoch": 49, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0038589657861989777, "bench": 0.01093248399745727, "cabinet": 0.011946541906508581, "car": 0.006623634328162365, "chair": 0.009740978492365318, "monitor": 0.010102340304725286, "lamp": 0.011960527366942328, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007610481834496239, "val_loss": 0.006770969170623264, "epoch": 50, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.003238861073295149, "bench": 0.007378175774144676, "cabinet": 0.008585307984110642, "car": 0.0049475093902492115, "chair": 0.00823694507989791, "monitor": 0.00875349950855673, "lamp": 0.010905857171141098, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.0077348811043207785, "val_loss": 0.006799934084948275, "epoch": 51, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.00319165613111715, "bench": 0.007601099391602221, "cabinet": 0.008722460586116884, "car": 0.0049450553486814165, "chair": 0.00824352214882877, "monitor": 0.009069557595406076, "lamp": 0.01071555139857625, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007438563325552799, "val_loss": 0.006770210913872811, "epoch": 52, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0029227413237403613, "bench": 0.007389291279903109, "cabinet": 0.008776566595111725, "car": 0.004666421432698024, "chair": 0.008384143215311958, "monitor": 0.009112927093516946, "lamp": 0.011385626651878464, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007863512707512692, "val_loss": 0.006728509079770826, "epoch": 53, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0029531924973939952, "bench": 0.007301090337763769, "cabinet": 0.008636570816471574, "car": 0.004691756790795063, "chair": 0.008358207947193634, "monitor": 0.008906248784693031, "lamp": 0.011152238355512748, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.0075480644069420766, "val_loss": 0.006666146465056506, "epoch": 54, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0030164715346634712, "bench": 0.007752113384268771, "cabinet": 0.008880015049551944, "car": 0.00442377450291402, "chair": 0.008250980973728964, "monitor": 0.008787014041791429, "lamp": 0.010379970546525279, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007362277385144495, "val_loss": 0.006841322246512657, "epoch": 55, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0032116468795456475, "bench": 0.0072203728703657075, "cabinet": 0.008782215368597239, "car": 0.005313964514267567, "chair": 0.008357452032862535, "monitor": 0.008348586963935334, "lamp": 0.010753185935603086, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007404565726295309, "val_loss": 0.006852943453424538, "epoch": 56, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0033795212219339178, "bench": 0.007277456945227624, "cabinet": 0.008630648758643614, "car": 0.0050386974736498814, "chair": 0.008419381783802566, "monitor": 0.008752937014298414, "lamp": 0.010574141987550996, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007411425032356902, "val_loss": 0.006628842560600806, "epoch": 57, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0030868643006441788, "bench": 0.0076488372924116985, "cabinet": 0.00839931091840988, "car": 0.004640680410921026, "chair": 0.00809800933796072, "monitor": 0.00851978325073645, "lamp": 0.010783265733583692, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007197229094504505, "val_loss": 0.0069377145034768845, "epoch": 58, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0033157766239313644, "bench": 0.007575372336271534, "cabinet": 0.008849657957662639, "car": 0.0053231636971229936, "chair": 0.008268837316871915, "monitor": 0.009330069498497896, "lamp": 0.010985068791099627, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007393555458307205, "val_loss": 0.006713037684714245, "epoch": 59, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.003323081313360619, "bench": 0.0072926427295231504, "cabinet": 0.00822316357677594, "car": 0.0049429232991068765, "chair": 0.008182938114373888, "monitor": 0.008610613050208667, "lamp": 0.010694102205204684, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007204483130996486, "val_loss": 0.00679221019400269, "epoch": 60, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0034243381528943732, "bench": 0.007924711111517647, "cabinet": 0.00836723241603243, "car": 0.005213580651999344, "chair": 0.008092941396680067, "monitor": 0.008743390625096735, "lamp": 0.010111098602530766, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007308473374593421, "val_loss": 0.006788277411011134, "epoch": 61, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0035162995182871034, "bench": 0.007869159790603085, "cabinet": 0.008592003673098477, "car": 0.005140115584600329, "chair": 0.008010239875383357, "monitor": 0.008679899741876095, "lamp": 0.010270606121436144, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.0073822350614411655, "val_loss": 0.006720865343315011, "epoch": 62, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.003029421325795205, "bench": 0.0077637825040259055, "cabinet": 0.008914821745514098, "car": 0.0048094277386631495, "chair": 0.008168401129936867, "monitor": 0.008466778009888595, "lamp": 0.010824917114191906, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.0074114428356079134, "val_loss": 0.006697776140894433, "epoch": 63, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0029390554021444994, "bench": 0.008082365192635515, "cabinet": 0.008761037868977995, "car": 0.004764801951645918, "chair": 0.008082468124863594, "monitor": 0.008986281355153003, "lamp": 0.010612612389963891, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007728249783701021, "val_loss": 0.006610930813264677, "epoch": 64, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.003121696608232326, "bench": 0.007398813477162218, "cabinet": 0.008373588241840405, "car": 0.004890599083894747, "chair": 0.008067225261616181, "monitor": 0.00822312794222863, "lamp": 0.010472770220375996, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007309809105726948, "val_loss": 0.006595168851958949, "epoch": 65, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.002959851867899737, "bench": 0.007474194849303047, "cabinet": 0.008578069607189832, "car": 0.004677067378132383, "chair": 0.0080568960225502, "monitor": 0.00868193970170668, "lamp": 0.010659635431013588, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007453750734291724, "val_loss": 0.006742938807113433, "epoch": 66, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0031198029928796024, "bench": 0.007607675381283905, "cabinet": 0.008712661293272183, "car": 0.004836745785479242, "chair": 0.008261563348834744, "monitor": 0.008582730672772433, "lamp": 0.010664730658574933, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007259658823517342, "val_loss": 0.006668466154795588, "epoch": 67, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0031336470427599477, "bench": 0.0075775127801390695, "cabinet": 0.008501041889767316, "car": 0.0049722440906414265, "chair": 0.008112825907976729, "monitor": 0.008360998906734194, "lamp": 0.010330603979820151, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007118876697419212, "val_loss": 0.006727366869913286, "epoch": 68, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.003059183141977257, "bench": 0.007339977915555156, "cabinet": 0.008649688155134939, "car": 0.0049773781785800745, "chair": 0.008252380397754293, "monitor": 0.008581609797528854, "lamp": 0.010737672357178056, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007308062997682402, "val_loss": 0.006831738779023758, "epoch": 69, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0028885793962899874, "bench": 0.007513350480351973, "cabinet": 0.009613156718848775, "car": 0.004750684049971981, "chair": 0.008367253613035551, "monitor": 0.008925594285919367, "lamp": 0.011266760382964048, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007235658177662773, "val_loss": 0.006676681939265221, "epoch": 70, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0032078199137896275, "bench": 0.007426205646918043, "cabinet": 0.008625287324824728, "car": 0.004765415143473088, "chair": 0.00812934193781765, "monitor": 0.008814343454509065, "lamp": 0.010387791148972902, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007204526021084203, "val_loss": 0.006608498631502842, "epoch": 71, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.002901688848995759, "bench": 0.007371527160335527, "cabinet": 0.008705103111087216, "car": 0.004713755001692397, "chair": 0.008109580518850497, "monitor": 0.00879639662637616, "lamp": 0.010555774908299367, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007191708119969451, "val_loss": 0.006695054293062351, "epoch": 72, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.002975719003418542, "bench": 0.00829689083534824, "cabinet": 0.009091249734985204, "car": 0.004556270520623078, "chair": 0.00799285886848454, "monitor": 0.009222243775136314, "lamp": 0.010598158122120897, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007228143589755676, "val_loss": 0.006664823909100653, "epoch": 73, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.003012690938773018, "bench": 0.007784682041472812, "cabinet": 0.00869997906003278, "car": 0.004606629990300757, "chair": 0.008184101045874855, "monitor": 0.008729252759476095, "lamp": 0.010453005590926732, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007161440275745121, "val_loss": 0.0065996142286820075, "epoch": 74, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.003085116456169244, "bench": 0.0072115152439664685, "cabinet": 0.008256993076098942, "car": 0.004611263515367733, "chair": 0.008162667122723389, "monitor": 0.008637102884285408, "lamp": 0.01075648075083961, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007133516771965197, "val_loss": 0.006595577624663892, "epoch": 75, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0030640855469050085, "bench": 0.007407957687676284, "cabinet": 0.008186976253790947, "car": 0.004876584741078228, "chair": 0.008029687569563227, "monitor": 0.008440915788792545, "lamp": 0.010707270564355961, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007064400970143271, "val_loss": 0.006727319727481793, "epoch": 76, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0031837296746354297, "bench": 0.0075565803552790495, "cabinet": 0.008970154527400562, "car": 0.00495922916478561, "chair": 0.007969401375394923, "monitor": 0.009211742323264398, "lamp": 0.010658960390534246, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.00715621402259454, "val_loss": 0.006809249618257926, "epoch": 77, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.002989116955215999, "bench": 0.007070397589450442, "cabinet": 0.008889707395105065, "car": 0.004906335165526665, "chair": 0.008487511579766053, "monitor": 0.008874832862301394, "lamp": 0.011055636184615626, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007191432828986022, "val_loss": 0.006635220446673456, "epoch": 78, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.00312945228061544, "bench": 0.00752672543671864, "cabinet": 0.008412079258637026, "car": 0.004934713593377171, "chair": 0.008009446071693852, "monitor": 0.008542702769230835, "lamp": 0.010521336268979086, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007172498101770763, "val_loss": 0.006723004294478596, "epoch": 79, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0033792384314704133, "bench": 0.007253260589774044, "cabinet": 0.008179609725501028, "car": 0.005150027382518457, "chair": 0.008247023668849864, "monitor": 0.00829065125504034, "lamp": 0.010081872556646764, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.0071861697199708694, "val_loss": 0.006604043258776299, "epoch": 80, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0030769211759177208, "bench": 0.007290591680545045, "cabinet": 0.008523791739156204, "car": 0.004746582147017537, "chair": 0.008049841484857403, "monitor": 0.0088696300202479, "lamp": 0.010414443933894072, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007138787575821003, "val_loss": 0.006699938239871871, "epoch": 81, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.002976013496291469, "bench": 0.0070337927744331796, "cabinet": 0.008731498552977944, "car": 0.004695939878511731, "chair": 0.008430342151519553, "monitor": 0.008611003215008519, "lamp": 0.01070581596641331, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007150091765027325, "val_loss": 0.006721501440943896, "epoch": 82, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.003217310702405137, "bench": 0.00696197147803741, "cabinet": 0.008630005236214822, "car": 0.004901500527621437, "chair": 0.00830596536570757, "monitor": 0.008729146704992304, "lamp": 0.01047217201609644, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007097004448475686, "val_loss": 0.006595963591799448, "epoch": 83, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0031442252061995063, "bench": 0.007640714586150051, "cabinet": 0.008312113376330291, "car": 0.0048224494401481206, "chair": 0.007925901333488986, "monitor": 0.008616002157491432, "lamp": 0.010512255556390073, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007161308485939557, "val_loss": 0.006747488110984964, "epoch": 84, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.003132736084097341, "bench": 0.007499767809078509, "cabinet": 0.008830664473264136, "car": 0.005073306657562545, "chair": 0.008062066201901053, "monitor": 0.008847548720590003, "lamp": 0.010911498393244977, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007071523394086222, "val_loss": 0.006538659196338486, "epoch": 85, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.002825209388981924, "bench": 0.007799813926849245, "cabinet": 0.008423919971327815, "car": 0.004354648620760077, "chair": 0.008032926588241604, "monitor": 0.008924782511337884, "lamp": 0.010753724429965694, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007010654973851969, "val_loss": 0.006644372153347577, "epoch": 86, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.003331209997166802, "bench": 0.007069546131031337, "cabinet": 0.008287144035972405, "car": 0.004925603689389651, "chair": 0.008095579398834398, "monitor": 0.008469328806596907, "lamp": 0.010437964255765077, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007086395873387324, "val_loss": 0.006544872908353457, "epoch": 87, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.002842561485082671, "bench": 0.007085696946204556, "cabinet": 0.00838093765273071, "car": 0.004441521457495045, "chair": 0.008255028926316682, "monitor": 0.008350183593214313, "lamp": 0.010935120307324346, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007109730683523186, "val_loss": 0.006657091493582148, "epoch": 88, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.002863489452386526, "bench": 0.007870843487405708, "cabinet": 0.00872652488245615, "car": 0.004725508618271686, "chair": 0.008113250280190871, "monitor": 0.008538090562907729, "lamp": 0.010907642898611491, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007059321245096258, "val_loss": 0.00660608636593414, "epoch": 89, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.002951953477928948, "bench": 0.007432347170658271, "cabinet": 0.008603695156677723, "car": 0.004800400090941905, "chair": 0.007895877324594612, "monitor": 0.009476259568482057, "lamp": 0.01073623561707855, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007010954208844052, "val_loss": 0.00662708932439105, "epoch": 90, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0029249209446735717, "bench": 0.00771822323184124, "cabinet": 0.008907979096943276, "car": 0.004317675718996544, "chair": 0.008102197464474834, "monitor": 0.009090822755923702, "lamp": 0.010954836171821414, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.006659642560800758, "val_loss": 0.006561106348743479, "epoch": 91, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.002828424869244548, "bench": 0.0071740279454301685, "cabinet": 0.008502867552077754, "car": 0.004334907782898921, "chair": 0.008204962458973302, "monitor": 0.008705314092403023, "lamp": 0.011250060766136459, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.006878498877032752, "val_loss": 0.006552958157404852, "epoch": 92, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.003044438114881537, "bench": 0.007513784012783412, "cabinet": 0.008483280651987056, "car": 0.004426831664478863, "chair": 0.008017609933696535, "monitor": 0.008765766311141296, "lamp": 0.010611986185461931, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.006969265227811964, "val_loss": 0.006674710054964852, "epoch": 93, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.002988916249599474, "bench": 0.007506271885977341, "cabinet": 0.008620392751175534, "car": 0.004899593515905979, "chair": 0.008056593335005502, "monitor": 0.009088699397389885, "lamp": 0.010769932337181522, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007358129630484123, "val_loss": 0.006760042941190978, "epoch": 94, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0030239031144902373, "bench": 0.007262687522697025, "cabinet": 0.008859953089381171, "car": 0.0050832151638530425, "chair": 0.008254330658594634, "monitor": 0.008710632091683537, "lamp": 0.010809587277746356, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.006917761128641606, "val_loss": 0.006680450093632148, "epoch": 95, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.00310558309741787, "bench": 0.00786991016702848, "cabinet": 0.008402709908293267, "car": 0.004975917138508808, "chair": 0.007942972527147442, "monitor": 0.008820049804389928, "lamp": 0.010871604979909128, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007055820378801223, "val_loss": 0.0065695926673969215, "epoch": 96, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.002897693597819393, "bench": 0.007256058176535529, "cabinet": 0.008298073840560945, "car": 0.00452858766252746, "chair": 0.008169705134609972, "monitor": 0.008553224407431429, "lamp": 0.011061429062349797, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007003267565122108, "val_loss": 0.006577877268305618, "epoch": 97, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0029045557053804924, "bench": 0.007531996330341172, "cabinet": 0.008253704858563858, "car": 0.00475490764022159, "chair": 0.008070897932785617, "monitor": 0.008379780889138651, "lamp": 0.010865552514995026, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.006934311903550354, "val_loss": 0.006664047819576512, "epoch": 98, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.0031137719562496563, "bench": 0.007196361471427615, "cabinet": 0.00859173515900999, "car": 0.005023301158895695, "chair": 0.00803223572258405, "monitor": 0.008586876130372215, "lamp": 0.010901000085965486, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}
+json_stats: {"train_loss": 0.007047878680209161, "val_loss": 0.006512422470886725, "epoch": 99, "lr": 0.001, "super_points": 2500, "bestval": 10, "airplane": 0.003000408209731087, "bench": 0.0078009975586566796, "cabinet": 0.00842180603402179, "car": 0.004495502067964579, "chair": 0.00782812008787488, "monitor": 0.008672605193195917, "lamp": 0.010694115015465121, "speaker": 0, "firearm": 0, "couch": 0, "table": 0, "cellphone": 0, "watercraft": 0}

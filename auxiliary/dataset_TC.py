@@ -5,7 +5,6 @@ import torch
 import os.path
 import numpy as np
 from utils import *
-# from .utils.cloud import ScanData
 from PIL import Image
 import torch.utils.data as data
 import torchvision.transforms as transforms
@@ -18,7 +17,7 @@ from cloud import ScanData
 from py3d import *
 
 class TangConvShapeNet(data.Dataset):
-    def __init__(self, root="/home/parker/datasets/TangConv", class_choice="couch",
+    def __init__(self, root="/home/parker/datasets/TangConvRand", class_choice="couch",
                  train = True, npoints=2500, normal=False, balanced=False,
                  gen_view=False, SVR=False, idx=0, num_scales=3, max_points=2500,
                  input_channels=3):
@@ -91,6 +90,11 @@ class TangConvShapeNet(data.Dataset):
             for fn in self.meta[item]:
                 self.datapath.append(fn)
 
+        self.perCatValueMeter = {}
+
+        for item in self.cat:
+            self.perCatValueMeter[item] = AverageValueMeter()
+
 
     def __getitem__(self, index):
         fn = self.datapath[index]
@@ -102,6 +106,8 @@ class TangConvShapeNet(data.Dataset):
         s.load(fn[0], self.num_scales)
         s.remap_depth()
         s.remap_normals()
+
+        ### ISSUE TO FIX ###
         if np.asarray(s.clouds[0].normals).shape[0] < self.max_points:
             s.resize(self.max_points)
         else:
@@ -109,43 +115,74 @@ class TangConvShapeNet(data.Dataset):
             s.remap_depth()
             s.remap_normals()
 
-        scale = []
-        scale.append([s.clouds[0], s.conv_ind[0], s.pool_ind[0], s.depth[0], s.pool_mask[0]])
-        scale.append([s.clouds[1], s.conv_ind[1], s.pool_ind[1], s.depth[1], s.pool_mask[1]])
-        scale.append([s.clouds[2], s.conv_ind[2], s.pool_ind[2], s.depth[2], s.pool_mask[2]])
+        masks = []
+        masks.append([np.asarray(s.clouds[0].points), s.conv_ind[0], s.pool_ind[0].astype(int), s.depth[0], s.pool_mask[0]])
+        masks.append([np.asarray(s.clouds[1].points), s.conv_ind[1], s.pool_ind[1].astype(int), s.depth[1], s.pool_mask[1]])
+        masks.append([np.asarray(s.clouds[2].points), s.conv_ind[2], s.pool_ind[2].astype(int), s.depth[2], s.pool_mask[2]])
 
-        # print(np.asarray(scale[0][0].normals))
-        # print(np.asarray(scale[0][0].normals).shape)
-        # print(np.asarray(scale[0][0].normals).shape)
-        # print(scale[2][1].shape)
-        # print(scale[1][2].shape)
-        # print(scale[2][3].shape)
-        # print(scale[1][4].shape)
-        # input('CHECK PCD')
-
-        point_set = torch.from_numpy(np.asarray(s.clouds[0].points))
+        normals = torch.from_numpy(np.asarray(s.clouds[0].normals))
 
         # return[0] : masks and other params for all scales
-        #       [1] : Point set from point cloud .plc file
+        #       [1] : Normals of object
         #       [2] : category name
         #       [3] : item name
         #
         #       [x] : path to the normalized_model drir in ShapeNetCorev2
 
-        # return data, point_set.contiguous(), fn[1], fn[2], fn[3]
-        return scale, point_set.contiguous(), fn[2], fn[3]
+        return masks, normals.contiguous(), fn[2], fn[3]
 
 
     def __len__(self):
         return len(self.datapath)
 
 
-
 if __name__  == '__main__':
 
     d  =  TangConvShapeNet(class_choice =  None, balanced= False, train=True, npoints=2500)
-    d.__getitem__(50)
-    # a = len(d)
-    # d  =  TangConvShapeNet(class_choice =  None, balanced= False, train=False, npoints=2500)
-    # a = a + len(d)
-    # print(a)
+    masks, normals, cat, item = d.__getitem__(50)
+    a = masks[2][2]
+    b = np.where(a > 625, 1, 0)
+    print(np.count_nonzero(b))
+    print(a)
+    print(masks[0][2].shape)
+    print(cat)
+    print(item)
+    # print(type(masks[0][0]))
+    # print(type(masks[0][1]))
+    # print(type(masks[0][2]))
+    # print(type(masks[0][3]))
+    # print(type(masks[0][4]))
+    # print(normals.shape)
+
+    ### FOR CHECKING POOL MASK SIZE ###
+    # faulty_samples = {}
+    # for i in range(0, len(d)):
+    #     masks, normals, cat, item = d.__getitem__(100)
+    #     a = masks[2][2]
+    #     b = np.where(a > 1250, 1, 0)
+
+    #     if np.count_nonzero(b) > 0:
+    #         faulty_samples.append([cat, item])
+    #         print(np.count_nonzero(b))
+    #         print('Found at index {}'.format(i))
+
+    # with open('faulty.txt', 'w') as f:
+    #     for item in faulty_samples:
+    #         f.write("%s\n" % item)
+
+
+    ### FOR CHECKING INDEXING MASK SIZE ###
+    # faulty_samples = {}
+    # for i in range(0, len(d)):
+    #     masks, normals, cat, item = d.__getitem__(100)
+    #     a = masks[2][1]
+    #     b = np.where(a > 625, 1, 0)
+
+    #     if np.count_nonzero(b) > 0:
+    #         faulty_samples.append([cat, item])
+    #         print(np.count_nonzero(b))
+    #         print('Found at index {}'.format(i))
+
+    # with open('faulty.txt', 'w') as f:
+    #     for item in faulty_samples:
+    #         f.write("%s\n" % item)

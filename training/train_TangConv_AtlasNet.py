@@ -3,14 +3,13 @@ import argparse
 import random
 import numpy as np
 import torch
+import torch.multiprocessing as mp
 import torch.optim as optim
 import sys
-sys.path.append('./auxiliary/')
+sys.path.append('/home/parker/code/AtlasNet/auxiliary/')
 from dataset_TC import *
-from dataset import *
 from model import *
 from utils import *
-from ply import *
 import os
 import json
 import time, datetime
@@ -18,7 +17,7 @@ import visdom
 
 # =============PARAMETERS======================================== #
 parser = argparse.ArgumentParser()
-parser.add_argument('--batchSize', type=int, default=32, help='input batch size')
+parser.add_argument('--batchSize', type=int, default=8, help='input batch size')
 parser.add_argument('--workers', type=int, default=12, help='number of data loading workers')
 parser.add_argument('--nepoch', type=int, default=40, help='number of epochs to train for')
 parser.add_argument('--model', type=str, default='',  help='optional reload model path')
@@ -35,7 +34,7 @@ print (opt)
 # =============DEFINE CHAMFER LOSS========================== #
 # ========================================================== #
 if opt.accelerated_chamfer:
-    sys.path.append("./extension/")
+    sys.path.append("/home/parker/code/AtlasNet/extension/")
     import dist_chamfer as ext
     distChamfer =  ext.chamferDist()
 
@@ -73,7 +72,7 @@ else:
 vis = visdom.Visdom(port = 8888, env=opt.env)
 now = datetime.datetime.now()
 save_path = now.isoformat()
-dir_name =  os.path.join('log', save_path)
+dir_name =  os.path.join('/home/parker/code/AtlasNet/log', save_path)
 if not os.path.exists(dir_name):
     os.mkdir(dir_name)
 logname = os.path.join(dir_name, 'log.txt')
@@ -83,7 +82,8 @@ blue = lambda x:'\033[94m' + x + '\033[0m'
 opt.manualSeed = random.randint(1, 10000) # fix seed
 print("Random Seed: ", opt.manualSeed)
 random.seed(opt.manualSeed)
-torch.manual_seed(opt.manualSeed)
+# mp.set_start_method('spawn')
+# torch.manual_seed(opt.manualSeed)
 best_val_loss = 10
 
 # ========================================================== #
@@ -104,7 +104,7 @@ len_dataset = len(dataset)
 # ========================================================== #
 # ===================CREATE network========================= #
 # ========================================================== #
-network = TangConv_AtlasNet(num_points = opt.num_points, nb_primitives = opt.nb_primitives)
+network = TangConv_AtlasNet(num_points=opt.num_points, nb_primitives=opt.nb_primitives)
 network.cuda() #put network on GPU
 network.apply(weights_init) #initialization of the weight
 
@@ -146,40 +146,47 @@ for epoch in range(opt.nepoch):
     if epoch==20:
         optimizer = optim.Adam(network.parameters(), lr = lrate/10.0)
 
-    for i, data in enumerate(dataloader, 0):
-        optimizer.zero_grad()
-        # img, points, cat, _, _ = data
-        masks, points, _, _ = data
-        points = points.transpose(2,1).contiguous()
-        points = points.cuda()
-        #SUPER_RESOLUTION optionally reduce the size of the points fed to PointNet
-        points = points[:,:,:opt.super_points].contiguous()
-        #END SUPER RESOLUTION
-        pointsReconstructed  = network(points, masks) #forward pass
-        dist1, dist2 = distChamfer(points.transpose(2,1).contiguous(), pointsReconstructed) #loss function
-        loss_net = (torch.mean(dist1)) + (torch.mean(dist2))
-        loss_net.backward()
-        train_loss.update(loss_net.item())
-        optimizer.step() #gradient update
-        # VIZUALIZE
-        if i%50 <= 0:
-            vis.scatter(X = points.transpose(2,1).contiguous()[0].data.cpu(),
-                    win = 'TRAIN_INPUT',
-                    opts = dict(
-                        title = "TRAIN_INPUT",
-                        markersize = 2,
-                        ),
-                    )
-            vis.scatter(X = pointsReconstructed[0].data.cpu(),
-                    Y = labels_generated_points[0:pointsReconstructed.size(1)],
-                    win = 'TRAIN_INPUT_RECONSTRUCTED',
-                    opts = dict(
-                        title="TRAIN_INPUT_RECONSTRUCTED",
-                        markersize=2,
-                        ),
-                    )
+    try:
+        for i, data in enumerate(dataloader, 0):
+            optimizer.zero_grad()
+            masks, normals, _, _ = data
 
-        print('[%d: %d/%d] train loss:  %f ' %(epoch, i, len_dataset/32, loss_net.item()))
+            # Transform input and mask tensors into cuda tensors
+            normals = normals.cuda()
+            for scale in range(3):
+                for idx in range(5):
+                    masks[scale][idx] = masks[scale][idx].cuda()
+
+            pointsReconstructed  = network(normals, masks) #forward pass
+
+            # dist1, dist2 = distChamfer(points.transpose(2,1).contiguous(), pointsReconstructed.double()) #loss function
+            dist1, dist2 = distChamfer(masks[0][0], pointsReconstructed.double()) #loss function
+            loss_net = (torch.mean(dist1)) + (torch.mean(dist2))
+            loss_net.backward()
+            train_loss.update(loss_net.item())
+            optimizer.step() #gradient update
+            # VIZUALIZE
+            if i%50 <= 0:
+                vis.scatter(X = masks[0][0][0].data.cpu(),
+                        win = 'TRAIN_INPUT',
+                        opts = dict(
+                            title = "TRAIN_INPUT",
+                            markersize = 2,
+                            ),
+                        )
+                vis.scatter(X = pointsReconstructed[0].data.cpu(),
+                        Y = labels_generated_points[0:pointsReconstructed.size(1)],
+                        win = 'TRAIN_INPUT_RECONSTRUCTED',
+                        opts = dict(
+                            title="TRAIN_INPUT_RECONSTRUCTED",
+                            markersize=2,
+                            ),
+                        )
+
+            print('[%d: %d/%d] train loss:  %f ' %(epoch, i, len_dataset/opt.batchSize, loss_net.item()))
+
+    except RuntimeError as e:
+        print(e)
 
 
     #UPDATE CURVES
@@ -193,19 +200,25 @@ for epoch in range(opt.nepoch):
     network.eval()
     with torch.no_grad():
         for i, data in enumerate(dataloader_test, 0):
-            img, points, cat, _ , _ = data
-            points = points.transpose(2,1).contiguous()
-            points = points.cuda()
-            #SUPER_RESOLUTION
-            points = points[:,:,:opt.super_points].contiguous()
-            #END SUPER RESOLUTION
-            pointsReconstructed  = network(points)
-            dist1, dist2 = distChamfer(points.transpose(2,1).contiguous(), pointsReconstructed)
+            ### TAKE OUT LATER###
+            if i == 500:
+                break
+            ####################
+
+            masks, normals, cat, _ = data
+            normals = normals.cuda()
+
+            for scale in range(3):
+                for idx in range(5):
+                    masks[scale][idx] = masks[scale][idx].cuda()
+
+            pointsReconstructed  = network(normals, masks)
+            dist1, dist2 = distChamfer(masks[0][0], pointsReconstructed.double())
             loss_net = (torch.mean(dist1)) + (torch.mean(dist2))
             val_loss.update(loss_net.item())
             dataset_test.perCatValueMeter[cat[0]].update(loss_net.item())
             if i%200 ==0 :
-                vis.scatter(X = points.transpose(2,1).contiguous()[0].data.cpu(),
+                vis.scatter(X = masks[0][0][0].data.cpu(),
                         win = 'VAL_INPUT',
                         opts = dict(
                             title = "VAL_INPUT",
@@ -220,7 +233,7 @@ for epoch in range(opt.nepoch):
                             markersize = 2,
                             ),
                         )
-            print('[%d: %d/%d] val loss:  %f ' %(epoch, i, len(dataset_test), loss_net.item()))
+            print('[%d: %d/%d] val loss:  %f ' %(epoch, i, len(dataset_test)/opt.batchSize, loss_net.item()))
 
         #UPDATE CURVES
         val_curve.append(val_loss.avg)
@@ -245,6 +258,7 @@ for epoch in range(opt.nepoch):
 
     }
     print(log_table)
+
     for item in dataset_test.cat:
         print(item, dataset_test.perCatValueMeter[item].avg)
         log_table.update({item: dataset_test.perCatValueMeter[item].avg})
